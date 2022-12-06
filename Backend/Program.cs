@@ -38,6 +38,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
 builder.Services.AddTransient<IMeetingService, MeetingService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
+builder.Services.AddTransient<IReportService, ReportService>();
 #endregion
 
 var app = builder.Build();
