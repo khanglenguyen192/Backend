@@ -1,6 +1,7 @@
 ﻿using Backend.Entities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
@@ -40,6 +41,30 @@ namespace Backend.Common
             }
 
             return timeZone;
+        }
+
+        public static DateTime ConvertDateTime(object value, string dateTimeFormat)
+        {
+            try
+            {
+                var defaultValue = DateTime.MinValue;
+
+                if (value == null || value == DBNull.Value)
+                {
+                    return defaultValue;
+                }
+
+                DateTime.TryParseExact(value.ToString(), dateTimeFormat, CultureInfo.InvariantCulture,
+                              DateTimeStyles.None, out defaultValue);
+
+                return defaultValue;
+
+            }
+            catch (Exception ex)
+            {
+                return DateTime.MinValue;
+            }
+
         }
     }
 }
