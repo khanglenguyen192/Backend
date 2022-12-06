@@ -1,2 +1,12 @@
 ﻿.vs
 Backend/obj
+Backend.Services/bin
+Backend.Services/obj
+Backend.Entities/bin
+Backend.Entities/obj
+Backend.DBContext/bin
+Backend.DBContext/obj
+Backend.Common/bin
+Backend.Common/obj
+Backend/bin
+Backend.DBContext/obj
