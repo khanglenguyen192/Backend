@@ -66,5 +66,15 @@ namespace Backend.Common
             }
 
         }
+
+        public static string GetDisplayImageUrl(string imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+                return string.Empty;
+
+            var imageLink = Constants.ImageDisplayPrefix.Replace(@"\", "/") + "/" + imageName;
+
+            return imageLink;
+        }
     }
 }

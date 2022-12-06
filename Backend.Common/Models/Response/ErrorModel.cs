@@ -9,13 +9,10 @@ namespace Backend.Common
 {
     public class ErrorModel
     {
-        [JsonProperty(PropertyName = "code")]
-        public string Code { get; set; }
+        [JsonProperty(PropertyName = "errorCode")]
+        public string ErrorCode { get; set; }
 
         [JsonProperty(PropertyName = "message")]
         public string Message { get; set; }
-
-        [JsonProperty(PropertyName = "innerError")]
-        public string InnerError { get; set; }
     }
 }

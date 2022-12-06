@@ -31,14 +31,14 @@ namespace Backend.Controllers
                 var result = _departmentService.CreateDepartment(model, CurrentUser.UserId);
                 if (result != null)
                 {
-                    return GetOKResult(result);
+                    return ResponseHelper.GetOKResult(result);
                 }
 
-                return GetServerErrorResult(ErrorMessageCode.CAN_NOT_CREATE_DEPARTMENT);
+                return ResponseHelper.GetServerErrorResult(ErrorMessageCode.CAN_NOT_CREATE_DEPARTMENT);
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -50,11 +50,11 @@ namespace Backend.Controllers
         {
             try
             {
-                return GetOKResult(null);
+                return ResponseHelper.GetOKResult(null);
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -64,15 +64,16 @@ namespace Backend.Controllers
         [Authorize(Roles = "Administrator")]
         public ResponseModel RemoveDepartment(int departmentId)
         {
-            if (departmentId == 0) return GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+            if (departmentId == 0)
+                return ResponseHelper.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
 
             try
             {
-                return GetOKResult(_departmentService.RemoveDepartment(departmentId, CurrentUser.UserId));
+                return ResponseHelper.GetOKResult(_departmentService.RemoveDepartment(departmentId, CurrentUser.UserId));
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
     }

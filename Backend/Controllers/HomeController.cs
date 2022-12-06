@@ -1,4 +1,5 @@
 ﻿using Backend.Common;
+using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,23 +20,26 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("login")]
-        public ResponseModel Login([FromBody] LoginModel model)
+        public ResponseModel Login([FromBody] LoginModel userLoginModel)
         {
-            return GetOKResult(model);
+            if (userLoginModel == null || string.IsNullOrWhiteSpace(userLoginModel.PassCode))
+                return ResponseHelper.GetBadRequestResult(ErrorMessageCode.FIELDS_IS_EMPTY);
+
+            return _userService.LoginUser(userLoginModel);
         }
 
         [HttpPost]
         [Route("logout")]
         public ResponseModel Logout()
         {
-            return GetOKResult(null);
+            return ResponseHelper.GetOKResult(null);
         }
 
         [HttpGet]
         [Route("getUserIndex")]
         public ResponseModel GetUserIndex(int userId)
         {
-            return GetOKResult(new UserIndexModel());
+            return ResponseHelper.GetOKResult(new UserIndexModel());
         }
     }
 }

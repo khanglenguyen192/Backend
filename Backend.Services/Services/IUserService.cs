@@ -1,4 +1,5 @@
-﻿using Backend.Entities;
+﻿using Backend.Common;
+using Backend.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace Backend.Services
 {
     public interface IUserService
     {
-        Task<User> GetUserById(int id);
+        User GetUserById(int id);
+
+        ResponseModel LoginUser(LoginModel loginModel);
     }
 }

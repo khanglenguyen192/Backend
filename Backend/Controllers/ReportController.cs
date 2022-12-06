@@ -27,17 +27,17 @@ namespace Backend.Controllers
         public ResponseModel GetDailyReportById(int reportId)
         {
             if (reportId == 0) 
-                return GetBadRequestResult(ErrorMessageCode.REPORT_NOT_FOUND);
+                return ResponseHelper.GetBadRequestResult(ErrorMessageCode.REPORT_NOT_FOUND);
 
             try
             {
 
-                return GetOKResult(_reportService.GetDailyReportById(reportId));
+                return ResponseHelper.GetOKResult(_reportService.GetDailyReportById(reportId));
 
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -51,11 +51,11 @@ namespace Backend.Controllers
             {
                 var result = _reportService.GetDailyReports(userId);
 
-                return GetOKResult(result);
+                return ResponseHelper.GetOKResult(result);
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -69,11 +69,11 @@ namespace Backend.Controllers
             {
                 var result = _reportService.CreateDailyReport(model, CurrentUser.UserId);
 
-                return GetOKResult(result);
+                return ResponseHelper.GetOKResult(result);
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
     }

@@ -28,11 +28,11 @@ namespace Backend.Controllers
             try
             {
                 model.TimeStartDateTime = CommonUtils.ConvertDateTime(model.TimeStart, Constants.DATETIME_FORMAT);
-                return GetOKResult(_meetingService.CreateMeeting(CurrentUser, model));
+                return ResponseHelper.GetOKResult(_meetingService.CreateMeeting(CurrentUser, model));
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -44,11 +44,11 @@ namespace Backend.Controllers
         {
             try
             {
-                return GetOKResult(_meetingService.RemoveMeeting(CurrentUser, meetingId));
+                return ResponseHelper.GetOKResult(_meetingService.RemoveMeeting(CurrentUser, meetingId));
             }
             catch (Exception ex)
             {
-                return GetServerErrorResult(ex.ToString());
+                return ResponseHelper.GetServerErrorResult(ex.ToString());
             }
         }
     }

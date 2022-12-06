@@ -23,50 +23,10 @@ namespace Backend.Controllers
         {
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
+            _userService = userService;
         }
 
-        protected ResponseModel GetOKResult(object result)
-        {
-            return new ResponseModel
-            {
-                Status = HttpStatusCode.OK,
-                IsSuccess = true,
-                Data = result,
-                Error = null
-            };
-        }
-
-        protected ResponseModel GetServerErrorResult(string ex)
-        {
-            return new ResponseModel
-            {
-                Status = HttpStatusCode.InternalServerError,
-                IsSuccess = false,
-                Data = null,
-                Error = new ErrorModel
-                {
-                    Code = HttpStatusCode.InternalServerError.ToString(),
-                    Message = ErrorMessageCode.SERVER_ERROR,
-                    InnerError = ex
-                }
-            };
-        }
-
-        protected ResponseModel GetBadRequestResult(string message)
-        {
-            return new ResponseModel
-            {
-                Status = HttpStatusCode.BadRequest,
-                IsSuccess = false,
-                Data = null,
-                Error = new ErrorModel
-                {
-                    Code = HttpStatusCode.BadRequest.ToString(),
-                    Message = ErrorMessageCode.BAD_REQUEST,
-                    InnerError = message
-                }
-            };
-        }
+        
 
         protected UserTokenModel GetUserIdentify()
         {
@@ -85,7 +45,7 @@ namespace Backend.Controllers
                 userModel.UserRole = (UserRole)Convert.ToInt32(claim.Value);
             }
 
-            var user = _userService.GetUserById(userModel.UserId)?.Result;
+            var user = _userService.GetUserById(userModel.UserId);
 
             if (user == null) return null;
 

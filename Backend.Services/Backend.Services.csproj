@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Backend.Common\Backend.Common.csproj" />
+    <ProjectReference Include="..\Backend.DBContext\Backend.DBContext.csproj" />
   </ItemGroup>
 
 </Project>

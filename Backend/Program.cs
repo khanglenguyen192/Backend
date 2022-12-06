@@ -19,21 +19,24 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.WebHost.UseIIS();
+builder.WebHost.UseIISIntegration();
 builder.Services.AddDbContext<BackendSystemContext>(options =>
 {
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-                     new MySqlServerVersion(new Version(8, 0, 27)));
+                     new MySqlServerVersion(new Version(8, 0, 27)),
+                     options => options.EnableRetryOnFailure());
 });
 builder.Services.AddScoped<DbContext>(serviceProvider => serviceProvider.GetRequiredService<BackendSystemContext>());
-builder.WebHost.UseIIS();
-builder.WebHost.UseIISIntegration();
+
 
 var settingsSection = builder.Configuration.GetSection("ConnectionStrings");
 var identitySettings = settingsSection.Get<IdentitySettings>();
 identitySettings.ServerUrl = builder.Configuration["ServerUrl"];
 DataConstants.IdentitySettings = identitySettings;
 
-#region Dependency Injection for service
+#region Dependency Service - creation
+builder.Services.AddTransient<IDbContextFactory, DbContextFactory>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
 builder.Services.AddTransient<IMeetingService, MeetingService>();

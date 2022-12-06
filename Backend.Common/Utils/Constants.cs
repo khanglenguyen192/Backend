@@ -16,5 +16,8 @@ namespace Backend.Common
         public const string DEFAULT_PASSCODE = "123456x@X";
 
         public const string ROLE = "role";
+
+        public static string UserDataFolderName = "UserData";
+        public static string ImageDisplayPrefix = "/userData/images";
     }
 }
