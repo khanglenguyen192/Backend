@@ -1,5 +1,6 @@
 using Backend.Common;
 using Backend.DBContext;
+using Backend.Service;
 using Backend.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,7 @@ builder.Services.AddTransient<IDepartmentService, DepartmentService>();
 builder.Services.AddTransient<IMeetingService, MeetingService>();
 builder.Services.AddTransient<IProjectService, ProjectService>();
 builder.Services.AddTransient<IReportService, ReportService>();
+builder.Services.AddTransient<ISalaryService, SalaryService>();
 #endregion
 
 var app = builder.Build();

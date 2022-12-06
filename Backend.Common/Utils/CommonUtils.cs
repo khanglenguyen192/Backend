@@ -76,5 +76,13 @@ namespace Backend.Common
 
             return imageLink;
         }
+
+        public static DateTime GetLocalTimeNow(TimeZoneInfo timeZone)
+        {
+            if (timeZone == null)
+                return DateTime.Now;
+
+            return TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZone);
+        }
     }
 }
