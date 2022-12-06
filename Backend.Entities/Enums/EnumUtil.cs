@@ -17,6 +17,7 @@ namespace Backend.Entities
             Interns,
             Collaborators
         }
+
         public enum SpecialDayType
         {
             None = 0,
@@ -26,12 +27,14 @@ namespace Backend.Entities
             Weekend = 4,
             Remote = 5
         }
+
         public enum HolidayType
         {
             Default = 1,
             NoneDefault,
             Company
         }
+
         public enum OvertimeRateType
         {
             Night = 0,
@@ -177,6 +180,21 @@ namespace Backend.Entities
             ChildrenMarriage = 2,
             Childbirth = 3,
             Mourn = 4
+        }
+
+        public enum AlertGroups
+        {
+            Message = 0,
+            Account,
+            Project,
+            DayOff,
+            OverTime,
+            Birthday,
+            CashAdvance,
+            All,
+            AllRead,
+            AllUnread,
+            Celebrator
         }
     }
 }
