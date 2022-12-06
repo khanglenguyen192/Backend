@@ -58,7 +58,7 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpDelete]
         [Produces("application/json")]
         [Route("removeDepartment")]
         [Authorize(Roles = "Administrator")]

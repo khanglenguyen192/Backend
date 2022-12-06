@@ -17,7 +17,7 @@ namespace Backend.Services
             return Task.FromResult(true);
         }
 
-        public Task<bool> DeleteMeeting(UserTokenModel userToken, int meetingId)
+        public Task<bool> RemoveMeeting(UserTokenModel userToken, int meetingId)
         {
             return Task.FromResult(false);
         }

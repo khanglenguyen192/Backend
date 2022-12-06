@@ -11,6 +11,6 @@ namespace Backend.Services
     public interface IMeetingService
     {
         Task<bool> CreateMeeting(UserTokenModel userToken, CreateMeetingModel model);
-        Task<bool> DeleteMeeting(UserTokenModel userToken, int meetingId);
+        Task<bool> RemoveMeeting(UserTokenModel userToken, int meetingId);
     }
 }

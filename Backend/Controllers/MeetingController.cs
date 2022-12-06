@@ -38,13 +38,13 @@ namespace Backend.Controllers
 
         [HttpDelete]
         [Produces("application/json")]
-        [Route("deleteMeeting")]
+        [Route("removeMeeting")]
         [Authorize]
-        public ResponseModel DeleteMeeting([FromBody] int meetingId)
+        public ResponseModel RemoveMeeting([FromBody] int meetingId)
         {
             try
             {
-                return GetOKResult(_meetingService.DeleteMeeting(CurrentUser, meetingId));
+                return GetOKResult(_meetingService.RemoveMeeting(CurrentUser, meetingId));
             }
             catch (Exception ex)
             {

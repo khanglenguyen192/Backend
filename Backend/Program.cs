@@ -36,6 +36,8 @@ DataConstants.IdentitySettings = identitySettings;
 #region Dependency Injection for service
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+builder.Services.AddTransient<IMeetingService, MeetingService>();
+builder.Services.AddTransient<IProjectService, ProjectService>();
 #endregion
 
 var app = builder.Build();
