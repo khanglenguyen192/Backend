@@ -11,7 +11,7 @@ namespace Backend.Entities
     {
         public DateTime TimeStart { get; set; }
 
-        public string Content { get; set; }
+        public string? Content { get; set; }
 
         public int LeaderId { get; set; }
         [ForeignKey("LeaderId")]

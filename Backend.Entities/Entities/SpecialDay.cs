@@ -11,7 +11,7 @@ namespace Backend.Entities
     public class SpecialDay : BaseEntity
     {
         public DateTime DateTime { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
         public DayOffOption Option { get; set; }
         public bool IsUrgent { get; set; }
         public DayOffStatus DayOffStatus { get; set; }

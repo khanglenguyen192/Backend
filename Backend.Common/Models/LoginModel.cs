@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Backend.Common
 {
-    public class Constants
+    public class LoginModel
     {
-        public const string ROLE = "role";
+        public string UserName { get; set; }
+        public string PassCode { get; set; }
     }
 }

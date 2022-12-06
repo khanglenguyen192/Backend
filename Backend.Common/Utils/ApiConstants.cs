@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Backend.Entities
+namespace Backend.Common
 {
-    public class Role : BaseEntity
+    public class ApiConstants
     {
-        public string? RoleName { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Backend.DBContext\Backend.DBContext.csproj" />
+    <ProjectReference Include="..\Backend.Services\Backend.Services.csproj" />
   </ItemGroup>
 
 </Project>

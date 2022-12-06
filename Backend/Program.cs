@@ -1,4 +1,6 @@
+using Backend.Common;
 using Backend.DBContext;
+using Backend.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,16 @@ builder.Services.AddDbContext<BackendSystemContext>(options =>
 builder.Services.AddScoped<DbContext>(serviceProvider => serviceProvider.GetRequiredService<BackendSystemContext>());
 builder.WebHost.UseIIS();
 builder.WebHost.UseIISIntegration();
+
+var settingsSection = builder.Configuration.GetSection("ConnectionStrings");
+var identitySettings = settingsSection.Get<IdentitySettings>();
+identitySettings.ServerUrl = builder.Configuration["ServerUrl"];
+DataConstants.IdentitySettings = identitySettings;
+
+#region Dependency Injection for service
+builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IDepartmentService, DepartmentService>();
+#endregion
 
 var app = builder.Build();
 

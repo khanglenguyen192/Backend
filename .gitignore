@@ -10,3 +10,5 @@ Backend.Common/bin
 Backend.Common/obj
 Backend/bin
 Backend.DBContext/obj
+Backend.Common/obj
+Backend.Services/obj

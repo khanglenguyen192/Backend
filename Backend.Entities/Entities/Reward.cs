@@ -9,9 +9,9 @@ namespace Backend.Entities
 {
     public class Reward : BaseEntity
     {
-        public string Template { get; set; }
+        public string? Template { get; set; }
 
-        public string Subject { get; set; }
+        public string? Subject { get; set; }
 
         public RewardStatus Status { get; set; }
     }

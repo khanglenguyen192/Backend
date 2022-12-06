@@ -12,8 +12,8 @@ namespace Backend.Entities
         public DateTime CheckinTime { get; set; }
         public DateTime CheckoutTime { get; set; }
 
-        public string CheckinNotes { get; set; }
-        public string CheckoutNotes { get; set; }
+        public string? CheckinNotes { get; set; }
+        public string? CheckoutNotes { get; set; }
 
         public int UserId { get; set; }
         [ForeignKey("UserId")]

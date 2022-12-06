@@ -8,8 +8,8 @@ namespace Backend.Entities
 {
     public class FilePolicy : BaseEntity
     {
-        public string Name { get; set; }
-        public string Content { get; set; }
+        public string? Name { get; set; }
+        public string? Content { get; set; }
         public bool IsDirectory { get; set; }
         public int ParentId { get; set; }
     }

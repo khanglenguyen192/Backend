@@ -15,9 +15,9 @@ namespace Backend.Entities
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
-        public string Content { get; set; }
+        public string? Content { get; set; }
         public int Successfully { get; set; }
-        public string TeamsNoitifyId { get; set; }
+        public string? TeamsNoitifyId { get; set; }
 
     }
 }

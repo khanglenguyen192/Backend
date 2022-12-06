@@ -14,7 +14,7 @@ namespace Backend.Entities
 
         public long Cash { get; set; }
 
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
 
         public CashAdvanceStatus Status { get; set; }
 

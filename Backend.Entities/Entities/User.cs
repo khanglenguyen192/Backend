@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,22 +10,27 @@ namespace Backend.Entities
 {
     public class User : BaseEntity
     {
-        private SalaryType _salaryType;
+        public User()
+        {
 
-        public String UserCode { get; set; }
-        public string UserName { get; set; }
-        public string PassCode { get; set; }
-        public string Salt { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
+        }
+
+        private SalaryType _salaryType;
+        public string? UserCode { get; set; }
+        public string? UserName { get; set; }
+        public string? PassCode { get; set; }
+        public string? Salt { get; set; }
+        public string? Email { get; set; }
+        public string? Phone { get; set; }
         public bool IsFirstLogin { get; set; }
         public UserRole Role { get;set; }
         public bool IsHardCode { get; set; }
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
         public Gender Gender { get; set; }
         public DateTime Birthday { get; set; }
-        public string Avatar { get; set; }
-        public string Address { get; set; }
+        public string? Avatar { get; set; }
+        [AllowNull]
+        public string? Address { get; set; }
         public DateTime DateJoinCompany { get; set; }
         public DateTime DateStartContract { get; set; }
 
@@ -55,24 +61,24 @@ namespace Backend.Entities
             }
         }
 
-        public string SlackId { get; set; }
-        public string BankAccount { get; set; }
+        public string? SlackId { get; set; }
+        public string? BankAccount { get; set; }
 
         public bool IsChangingPassword { get; set; }
         public DateTime LastLogin { get; set; }
         public int TotalLoginFail { get; set; }
         public DateTime LastLoginFail { get; set; }
-        public string TimeZone { get; set; }
+        public string? TimeZone { get; set; }
 
-        public string SkypeId { get; set; }
-        public string LinkedId { get; set; }
-        public string FacebookId { get; set; }
+        public string? SkypeId { get; set; }
+        public string? LinkedId { get; set; }
+        public string? FacebookId { get; set; }
 
         public long UserIdentity { get; set; }
         public DateTime IdIssueDate { get; set; }
-        public string IdIssuePlace { get; set; }
-        public string IdFrontImage { get; set; }
-        public string IdBackImage { get; set; }
+        public string? IdIssuePlace { get; set; }
+        public string? IdFrontImage { get; set; }
+        public string? IdBackImage { get; set; }
 
         public double TotalDayOffRemainInYear { get; set; }
         public double TotalDayOffInYear { get; set; }

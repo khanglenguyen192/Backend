@@ -10,17 +10,17 @@ namespace Backend.Entities
 {
     public class Project : BaseEntity
     {
-        public string ProjectName { get; set; }
+        public string? ProjectName { get; set; }
 
         public ProjectStatus Status { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
-        public string ProjectLogo { get; set; }
+        public string? ProjectLogo { get; set; }
 
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public virtual User Owner { get; set; }
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
     }
 }

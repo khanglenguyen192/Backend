@@ -10,12 +10,12 @@ namespace Backend.Entities
 {
     public class Department : BaseEntity
     {
-        public string DepartmentName { get; set; }
+        public string? DepartmentName { get; set; }
 
         public DepartmentStatus Status { get; set; }
 
-        public string Description { get; set; }
-        public string DepartmentLogo { get; set; }
+        public string? Description { get; set; }
+        public string? DepartmentLogo { get; set; }
         public int OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public virtual User Owner { get; set; }

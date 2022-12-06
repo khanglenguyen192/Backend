@@ -14,7 +14,7 @@ namespace Backend.Entities
 
         public CompanyEventType EventType { get; set; }
 
-        public string TargetObject { get; set; }
+        public string? TargetObject { get; set; }
 
         public int UserId { get; set; }
 
