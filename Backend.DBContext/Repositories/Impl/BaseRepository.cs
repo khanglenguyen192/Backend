@@ -184,7 +184,7 @@ namespace Backend.DBContext
                     query = query.Where(whereClause);
                 }
 
-                return query.FirstOrDefault(); ;
+                return query.FirstOrDefault();
             }
         }
 
