@@ -32,14 +32,14 @@ namespace Backend.Controllers
                 var result = _projectService.CreateProject(model, CurrentUser.UserId);
                 if (result != null)
                 {
-                    return ResponseHelper.GetOKResult(result);
+                    return ResponseUtil.GetOKResult(result);
                 }
 
-                return ResponseHelper.GetServerErrorResult(ErrorMessageCode.SERVER_ERROR);
+                return ResponseUtil.GetServerErrorResult(ErrorMessageCode.SERVER_ERROR);
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.ToString());
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
     }

@@ -28,11 +28,11 @@ namespace Backend.Controllers
         {
             try
             {
-                return ResponseHelper.GetOKResult(_salaryService.GetSalaries(CurrentUser.UserId, listUserId, CommonUtils.GetLocalTimeNow(CurrentUser.TimeZoneInfo)));
+                return ResponseUtil.GetOKResult(_salaryService.GetSalaries(CurrentUser.UserId, listUserId, CommonUtils.GetLocalTimeNow(CurrentUser.TimeZoneInfo)));
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.ToString());
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
     }

@@ -31,14 +31,14 @@ namespace Backend.Controllers
                 var result = _departmentService.CreateDepartment(model, CurrentUser.UserId);
                 if (result != null)
                 {
-                    return ResponseHelper.GetOKResult(result);
+                    return ResponseUtil.GetOKResult(result);
                 }
 
-                return ResponseHelper.GetServerErrorResult(ErrorMessageCode.CAN_NOT_CREATE_DEPARTMENT);
+                return ResponseUtil.GetServerErrorResult(ErrorMessageCode.CAN_NOT_CREATE_DEPARTMENT);
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.ToString());
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -50,11 +50,11 @@ namespace Backend.Controllers
         {
             try
             {
-                return ResponseHelper.GetOKResult(null);
+                return ResponseUtil.GetOKResult(null);
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.ToString());
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
 
@@ -65,15 +65,15 @@ namespace Backend.Controllers
         public ResponseModel RemoveDepartment(int departmentId)
         {
             if (departmentId == 0)
-                return ResponseHelper.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+                return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
 
             try
             {
-                return ResponseHelper.GetOKResult(_departmentService.RemoveDepartment(departmentId, CurrentUser.UserId));
+                return ResponseUtil.GetOKResult(_departmentService.RemoveDepartment(departmentId, CurrentUser.UserId));
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.ToString());
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
     }

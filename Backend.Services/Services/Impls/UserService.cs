@@ -31,7 +31,7 @@ namespace Backend.Services
 
             if (user == null)
             {
-                return ResponseHelper.GetErrorResult(HttpStatusCode.NotFound, ErrorMessageCode.USER_NOT_FOUND);
+                return ResponseUtil.GetErrorResult(HttpStatusCode.NotFound, ErrorMessageCode.USER_NOT_FOUND);
             }
 
             if (user.TotalLoginFail >= 3)
@@ -39,14 +39,14 @@ namespace Backend.Services
                 var timelogin = DateTime.UtcNow - user.LastLoginFail;
                 if (timelogin.TotalMinutes < 30)
                 {
-                    return ResponseHelper.GetErrorResult(HttpStatusCode.Forbidden, ErrorMessageCode.USER_HAS_BEEN_LOCKED);
+                    return ResponseUtil.GetErrorResult(HttpStatusCode.Forbidden, ErrorMessageCode.USER_HAS_BEEN_LOCKED);
                 }
                 user.TotalLoginFail = 0;
             }
 
             if (user.IsDeactivate)
             {
-                return ResponseHelper.GetErrorResult(HttpStatusCode.Forbidden, ErrorMessageCode.USER_IS_DEACTIVATE);
+                return ResponseUtil.GetErrorResult(HttpStatusCode.Forbidden, ErrorMessageCode.USER_IS_DEACTIVATE);
             }
 
             try
@@ -69,7 +69,7 @@ namespace Backend.Services
 
                     _userRepository.Update(user);
 
-                    return ResponseHelper.GetOKResult(data);
+                    return ResponseUtil.GetOKResult(data);
                 }
                 else
                 {
@@ -84,12 +84,12 @@ namespace Backend.Services
                         //TODO: Handle total login failed >= 3
                     }
 
-                    return ResponseHelper.GetErrorResult(HttpStatusCode.NotFound, ErrorMessageCode.PASSWORD_INCORRECT);
+                    return ResponseUtil.GetErrorResult(HttpStatusCode.NotFound, ErrorMessageCode.PASSWORD_INCORRECT);
                 }
             }
             catch (Exception ex)
             {
-                return ResponseHelper.GetServerErrorResult(ex.Message);
+                return ResponseUtil.GetServerErrorResult(ex.Message);
             }
         }
     }

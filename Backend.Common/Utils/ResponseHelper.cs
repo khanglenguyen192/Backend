@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.Common
 {
-    public static class ResponseHelper
+    public static class ResponseUtil
     {
         public static ResponseModel GetOKResult(object result)
         {

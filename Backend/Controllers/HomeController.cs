@@ -23,7 +23,7 @@ namespace Backend.Controllers
         public ResponseModel Login([FromBody] LoginModel userLoginModel)
         {
             if (userLoginModel == null || string.IsNullOrWhiteSpace(userLoginModel.PassCode))
-                return ResponseHelper.GetBadRequestResult(ErrorMessageCode.FIELDS_IS_EMPTY);
+                return ResponseUtil.GetBadRequestResult(ErrorMessageCode.FIELDS_IS_EMPTY);
 
             return _userService.LoginUser(userLoginModel);
         }
@@ -32,14 +32,14 @@ namespace Backend.Controllers
         [Route("logout")]
         public ResponseModel Logout()
         {
-            return ResponseHelper.GetOKResult(null);
+            return ResponseUtil.GetOKResult(null);
         }
 
         [HttpGet]
         [Route("getUserIndex")]
         public ResponseModel GetUserIndex(int userId)
         {
-            return ResponseHelper.GetOKResult(new UserIndexModel());
+            return ResponseUtil.GetOKResult(new UserIndexModel());
         }
     }
 }
