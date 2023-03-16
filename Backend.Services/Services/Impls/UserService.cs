@@ -14,10 +14,12 @@ namespace Backend.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IJwtHandler _jwtHandler;
 
-        public UserService(IDbContextFactory contextFactory)
+        public UserService(IDbContextFactory contextFactory, IJwtHandler jwtHandler)
         {
             _userRepository = new UserRepository(contextFactory);
+            _jwtHandler = jwtHandler;
         }
 
         public User GetUserById(int id)
@@ -57,7 +59,8 @@ namespace Backend.Services
                     LoginResponseModel data = new LoginResponseModel();
                     data.IsFirstLogin = user.IsFirstLogin;
                     //Get Token
-                    // data.Token = _jwtHandler.Create(user.Id.ToString(), expireToken, user.Role);
+                    int expireToken = 5;
+                    data.Token = _jwtHandler.Create(user.Id.ToString(), expireToken, user.Role);
                     data.Avatar = CommonUtils.GetDisplayImageUrl(user.Avatar);
                     data.FullName = user.FullName;
                     data.Role = user.Role.ToString();

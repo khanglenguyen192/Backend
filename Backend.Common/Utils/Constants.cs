@@ -19,5 +19,8 @@ namespace Backend.Common
 
         public static string UserDataFolderName = "UserData";
         public static string ImageDisplayPrefix = "/userData/images";
+
+        public const string API_ISSUER = "BackEndSystem";
+        public const string API_CLIENT = "BackEndSystemClient";
     }
 }
