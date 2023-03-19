@@ -15,7 +15,7 @@ namespace Backend.Common
             {
                 Status = HttpStatusCode.OK,
                 IsSuccess = true,
-                Data = result,
+                Payload = result,
                 Error = null
             };
         }
@@ -36,7 +36,7 @@ namespace Backend.Common
             {
                 Status = statusCode,
                 IsSuccess = false,
-                Data = null,
+                Payload = null,
                 Error = new ErrorModel
                 {
                     ErrorCode = errorCode,

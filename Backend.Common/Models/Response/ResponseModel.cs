@@ -15,6 +15,6 @@ namespace Backend.Common
 
         public bool IsSuccess { get; set; } = false;
 
-        public object Data { get; set; }
+        public object Payload { get; set; }
     }
 }

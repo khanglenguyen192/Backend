@@ -21,8 +21,8 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        [Route("createDepartment")]
-        [Authorize(Roles = "Administrator")]
+        [Route("create-department")]
+        //[Authorize(Roles = "Administrator")]
         [Authorize]
         public ResponseModel CreateDepartment([FromBody] CreateDepartmentModel model)
         {
@@ -44,7 +44,7 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [Route("getDepartments")]
+        [Route("get-departments")]
         [Authorize]
         public ResponseModel GetDepartments(int userId)
         {
@@ -60,7 +60,7 @@ namespace Backend.Controllers
 
         [HttpDelete]
         [Produces("application/json")]
-        [Route("removeDepartment")]
+        [Route("remove-departments")]
         [Authorize(Roles = "Administrator")]
         public ResponseModel RemoveDepartment(int departmentId)
         {
