@@ -1,7 +1,11 @@
 ﻿using Backend.Common;
+using Backend.Common.Models.Department;
+using Backend.DBContext;
+using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Backend.Entities.EnumUtil;
 
 namespace Backend.Controllers
 {
@@ -9,14 +13,27 @@ namespace Backend.Controllers
     [ApiController]
     public class DepartmentController : BaseController
     {
-        private readonly IDepartmentService _departmentService;
+        private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IDepartmentMapRepository _departmentMapRepository;
+        private readonly IDepartmentUserMapRepository _departmentUserMapRepository;
+        private readonly IRoleRepository _roleRepository;
 
-        public DepartmentController(IDepartmentService departmentService,
-                                    IUserService userService,
+        public DepartmentController(IUserService userService,
                                     IWebHostEnvironment webHostEnvironment,
-                                    ILogger<BaseController> logger) : base(userService, webHostEnvironment, logger)
+                                    ILogger<BaseController> logger,
+                                    IUserRepository userRepository,
+                                    IDepartmentRepository departmentRepository,
+                                    IDepartmentMapRepository departmentMapRepository,
+                                    IDepartmentUserMapRepository departmentUserMapRepository,
+                                    IRoleRepository roleRepository) 
+            : base(userService, webHostEnvironment, logger)
         {
-            _departmentService = departmentService;
+            _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
+            _departmentMapRepository = departmentMapRepository;
+            _departmentUserMapRepository = departmentUserMapRepository;
+            _roleRepository = roleRepository;
         }
 
         [HttpPost]
@@ -28,13 +45,29 @@ namespace Backend.Controllers
         {
             try
             {
-                var result = _departmentService.CreateDepartment(model, CurrentUser.UserId);
-                if (result != null)
+                Department department = _mapper.Map<CreateDepartmentModel, Department>(model);
+
+                Department parentDepartment = null;
+                if (model.ParentId != null)
                 {
-                    return ResponseUtil.GetOKResult(result);
+                    parentDepartment = _departmentRepository.FirstOrDefault(d => d.Id == model.ParentId && !d.IsDeactivate);
+
+                    if (parentDepartment == null)
+                        return ResponseUtil.GetBadRequestResult("Parent department not exist");
                 }
 
-                return ResponseUtil.GetServerErrorResult(ErrorMessageCode.CAN_NOT_CREATE_DEPARTMENT);
+                department.OwnerId = 1; //Default: Assign to root user
+                _departmentRepository.Insert(department);
+
+                if (parentDepartment != null)
+                {
+                    DepartmentMap departmentMap = new DepartmentMap();
+                    departmentMap.DepartmentId = department.Id;
+                    departmentMap.ParentDepartmentId = parentDepartment.Id;
+                    _departmentMapRepository.Insert(departmentMap);
+                }
+
+                return ResponseUtil.GetOKResult(department);
             }
             catch (Exception ex)
             {
@@ -44,13 +77,13 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [Route("get-departments")]
+        [Route("get-by-owner")]
         [Authorize]
         public ResponseModel GetDepartments(int userId)
         {
             try
             {
-                return ResponseUtil.GetOKResult(null);
+                return ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => d.OwnerId == userId && !d.IsDeactivate));
             }
             catch (Exception ex)
             {
@@ -61,15 +94,155 @@ namespace Backend.Controllers
         [HttpDelete]
         [Produces("application/json")]
         [Route("remove-departments")]
-        [Authorize(Roles = "Administrator")]
+        //[Authorize(Roles = "Administrator")]
         public ResponseModel RemoveDepartment(int departmentId)
         {
-            if (departmentId == 0)
-                return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
-
             try
             {
-                return ResponseUtil.GetOKResult(_departmentService.RemoveDepartment(departmentId, CurrentUser.UserId));
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                department.IsDeactivate = true;
+                _departmentRepository.Update(department);
+
+                return ResponseUtil.GetOKResult("OK");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("add-department-users")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel AddUsersToDepartment([FromBody] AddDepartmentUserModel model)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == model.DepartmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                if (model.Users != null )
+                {
+                    foreach (var userModel in model.Users)
+                    {
+                        var user = _userRepository.FirstOrDefault(u => u.Id == userModel.Id && !u.IsDeactivate);
+                        if (user != null)
+                        {
+                            DepartmentUserMap departmentUserMap = new DepartmentUserMap();
+                            departmentUserMap.UserId = userModel.Id;
+                            departmentUserMap.DepartmentId = model.DepartmentId;
+                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
+                            if (role != null)
+                            {
+                                departmentUserMap.RoleId = role.Id;
+                            }
+                            else
+                            {
+                                departmentUserMap.RoleId = 3; //Default role Employee to department
+                            }
+
+                            _departmentUserMapRepository.Insert(departmentUserMap);
+                        }
+                    }
+                }
+                
+                return ResponseUtil.GetOKResult("SUCCESS");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("get-department-users")]
+        [Authorize]
+        public ResponseModel AddUsersToDepartment([FromBody] int departmentId)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var userIds = _departmentUserMapRepository.GetAll(d => d.Id == departmentId && !d.IsDeactivate)?.Select(p => p.UserId);
+
+                List<UserInfoModel> response = new List<UserInfoModel>();
+
+                if (userIds != null)
+                {
+                    foreach (var userId in userIds)
+                    {
+                        var user = _userRepository.FirstOrDefault(p => p.Id == userId && !p.IsDeactivate);
+                        if (user != null)
+                        {
+                            UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
+                            response.Add(userInfoModel);
+                        }
+                    }
+                }
+
+                if (response.Any())
+                    return ResponseUtil.GetOKResult(response);
+
+                return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-for-employee")]
+        [Authorize]
+        public ResponseModel GetDepartmentsForEmployee(int employeeId)
+        {
+            try
+            {
+                var departmentIds = _departmentUserMapRepository.GetAll(d => d.UserId == employeeId && !d.IsDeactivate)?.Select(p => p.DepartmentId);
+
+                if (departmentIds != null)
+                {
+                    ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => departmentIds.Contains(d.Id) && !d.IsDeactivate));
+                }
+
+                return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-children")]
+        [Authorize]
+        public ResponseModel GetChildren(int departmentId)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var childDepartmentIds = _departmentMapRepository.GetAll(d => d.ParentDepartmentId == departmentId && !d.IsDeactivate).Select(p => p.DepartmentId);
+
+                if (childDepartmentIds != null)
+                {
+                    ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => childDepartmentIds.Contains(d.Id) && !d.IsDeactivate));
+                }
+
+                return ResponseUtil.GetOKResult(null);
             }
             catch (Exception ex)
             {

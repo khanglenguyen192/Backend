@@ -1,6 +1,7 @@
 using Backend;
 using Backend.Common;
 using Backend.DBContext;
+using Backend.DBContext.Repositories.Impl;
 using Backend.Service;
 using Backend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -59,6 +60,16 @@ builder.Services.AddTransient<IProjectService, ProjectService>();
 builder.Services.AddTransient<IReportService, ReportService>();
 builder.Services.AddTransient<ISalaryService, SalaryService>();
 builder.Services.Configure<SecurityConfig>(builder.Configuration.GetSection("SecurityConfig"));
+#endregion
+
+#region Repository
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddTransient<IDepartmentMapRepository, DepartmentMapRepository>();
+builder.Services.AddTransient<IDepartmentUserMapRepository, DepartmentUserMapRepository>();
+builder.Services.AddTransient<IRoleRepository, RoleRepository>();
+builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
+builder.Services.AddTransient<IProjectUserMapRepository, ProjectUserMapRepository>();
 #endregion
 
 var securityConfig = builder.Configuration.GetSection("SecurityConfig").Get<SecurityConfig>();

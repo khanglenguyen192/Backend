@@ -16,8 +16,8 @@ namespace Backend.Entities
 
         public string? Description { get; set; }
         public string? DepartmentLogo { get; set; }
-        public int OwnerId { get; set; }
+        public int? OwnerId { get; set; }
         [ForeignKey("OwnerId")]
-        public virtual User Owner { get; set; }
+        public virtual User? Owner { get; set; }
     }
 }

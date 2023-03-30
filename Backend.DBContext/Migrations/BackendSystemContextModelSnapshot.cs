@@ -176,7 +176,8 @@ namespace Backend.DBContext.Migrations
                     b.Property<DateTime>("Modified")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("OwnerId")
+                    b.Property<int?>("OwnerId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Status")
@@ -318,7 +319,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6878),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(230),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "UserRole",
@@ -328,7 +329,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6888),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(242),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Administrator",
@@ -338,7 +339,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6897),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(252),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Manager",
@@ -348,7 +349,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6904),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(261),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Employee",
@@ -358,7 +359,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6911),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(269),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Interns",
@@ -368,7 +369,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 7,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6922),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(338),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Probationer",
@@ -378,7 +379,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 8,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6929),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(347),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Collaborators",
@@ -388,7 +389,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 20,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6936),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(356),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Gender",
@@ -398,7 +399,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 21,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6943),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(364),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nam",
@@ -408,7 +409,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 22,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6952),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(373),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nữ",
@@ -418,7 +419,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 23,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6959),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(381),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Khác",
@@ -428,7 +429,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 41,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6967),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(390),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "DayOffOption",
@@ -438,7 +439,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 42,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6974),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(398),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Cả ngày",
@@ -448,7 +449,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 43,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6981),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(406),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sáng",
@@ -458,7 +459,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 44,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6988),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(415),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Chiều",
@@ -468,7 +469,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 45,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6995),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(423),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "ProjectStatus",
@@ -478,7 +479,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 47,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7002),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(432),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Đang hoạt động",
@@ -488,7 +489,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 48,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7057),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(441),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tạm dừng",
@@ -498,7 +499,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 49,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7064),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(449),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Đã hoàn thành",
@@ -508,7 +509,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 50,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7071),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(457),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "HolidayType",
@@ -518,7 +519,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 51,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7078),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(465),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Ngày nghỉ cố định",
@@ -528,7 +529,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 52,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7085),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(473),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Ngày nghỉ không cố định",
@@ -538,7 +539,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 53,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7092),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(481),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Ngày nghỉ do công ty quy định",
@@ -548,7 +549,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 54,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7099),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(489),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "OvertimeRateType",
@@ -558,7 +559,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 55,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7106),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(497),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "x2",
@@ -568,7 +569,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 56,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7113),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(505),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "x3",
@@ -578,7 +579,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 57,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7119),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(513),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "SalaryType",
@@ -588,7 +589,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 58,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7127),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(522),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "NET",
@@ -598,7 +599,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 59,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7134),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(530),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "GROSS",
@@ -608,7 +609,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 60,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7141),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(538),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "PARTTIME",
@@ -618,7 +619,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 61,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7148),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(546),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "PROBATION",
@@ -628,7 +629,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 62,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7155),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(555),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "AlertGroups",
@@ -638,7 +639,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 63,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7162),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(562),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tất cả",
@@ -648,7 +649,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 64,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7171),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(615),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Đã đọc",
@@ -658,7 +659,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 65,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7178),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(623),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Chưa đọc",
@@ -668,7 +669,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 66,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7185),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(632),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tài khoản",
@@ -678,7 +679,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 67,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7192),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(643),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Ngày nghỉ",
@@ -688,7 +689,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 68,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7199),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(652),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tin nhắn",
@@ -698,7 +699,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 69,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7207),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(660),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Làm thêm giờ",
@@ -708,7 +709,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 70,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7214),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(669),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Dự án",
@@ -718,7 +719,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 71,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7221),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(677),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sinh nhật",
@@ -728,7 +729,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 72,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7228),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(688),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Ứng lương",
@@ -738,7 +739,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 73,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7235),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(696),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "DepartmentStatus",
@@ -748,7 +749,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 74,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7242),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(705),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Đang hoạt động",
@@ -758,7 +759,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 75,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7249),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(714),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Dừng hoạt động",
@@ -768,7 +769,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 76,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7299),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(723),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Sớm ra mắt",
@@ -778,7 +779,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 85,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7307),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(731),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "SpecialDayOff",
@@ -788,7 +789,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 86,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7314),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(739),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Kết hôn",
@@ -798,7 +799,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 87,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7321),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(748),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Con đẻ, con nuôi kết hôn",
@@ -808,7 +809,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 88,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7328),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(756),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nghỉ sinh con",
@@ -818,7 +819,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 89,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7335),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(765),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Nghỉ để tang",
@@ -1200,7 +1201,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 1,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7348),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(779),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Administrator"
@@ -1208,7 +1209,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 2,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7357),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(791),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Manager"
@@ -1216,7 +1217,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 3,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7364),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(799),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Employee"
@@ -1224,7 +1225,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 4,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7370),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(807),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Probationer"
@@ -1232,7 +1233,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 5,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7377),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(815),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Interns"
@@ -1240,7 +1241,7 @@ namespace Backend.DBContext.Migrations
                         new
                         {
                             Id = 6,
-                            Created = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(7385),
+                            Created = new DateTime(2023, 3, 30, 4, 12, 7, 849, DateTimeKind.Utc).AddTicks(824),
                             IsDeactivate = false,
                             Modified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RoleName = "Collaborators"
@@ -1687,7 +1688,7 @@ namespace Backend.DBContext.Migrations
                         {
                             Id = 1,
                             BasicSalary = 0L,
-                            Birthday = new DateTime(2022, 12, 6, 8, 23, 18, 769, DateTimeKind.Utc).AddTicks(6063),
+                            Birthday = new DateTime(2023, 3, 30, 4, 12, 7, 848, DateTimeKind.Utc).AddTicks(9515),
                             Created = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateJoinCompany = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateStartContract = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),

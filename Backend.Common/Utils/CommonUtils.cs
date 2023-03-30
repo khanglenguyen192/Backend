@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Backend.Common
@@ -84,5 +85,38 @@ namespace Backend.Common
 
             return TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, timeZone);
         }
+
+        //public static bool IsValidEmail(string email)
+        //{
+        //    bool invalid = false;
+
+        //    if (string.IsNullOrEmpty(email)) return false;
+
+        //    try
+        //    {
+        //        email = Regex.Replace(email, @"(@)(.+)$", DomainMapper, RegexOptions.None, TimeSpan.FromMilliseconds(200));
+        //    }
+        //    catch (RegexMatchTimeoutException)
+        //    {
+
+        //        return false;
+        //    }
+
+        //    if (invalid)
+        //        return false;
+
+        //    try
+        //    {
+        //        return Regex.IsMatch(email,
+        //            @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+        //              @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-0-9a-z]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$",
+        //            RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
+        //    }
+        //    catch (RegexMatchTimeoutException)
+        //    {
+
+        //        return false;
+        //    }
+        //}
     }
 }

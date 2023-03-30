@@ -1,13 +1,16 @@
 ﻿using Backend.Common;
+using Backend.Common.Models.User;
 using Backend.DBContext;
 using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static Backend.Entities.EnumUtil;
 
 namespace Backend.Services
 {
@@ -20,6 +23,19 @@ namespace Backend.Services
         {
             _userRepository = new UserRepository(contextFactory);
             _jwtHandler = jwtHandler;
+        }
+
+        public ResponseModel CreateUser(UserApiModel model, UserRole userRole)
+        {
+            var user = model.ToEntity(new User(), userRole);
+            user.Salt = Guid.NewGuid().ToString().Replace("-", "");
+            user.PassCode = CommonUtils.GeneratePasscode(Constants.DEFAULT_PASSCODE, user.Salt);
+            user.IsFirstLogin = true;
+            user.IsDeactivate = false;
+
+            _userRepository.Insert(user);
+
+            return ResponseUtil.GetOKResult(user);
         }
 
         public User GetUserById(int id)
@@ -36,7 +52,7 @@ namespace Backend.Services
                 return ResponseUtil.GetErrorResult(HttpStatusCode.NotFound, ErrorMessageCode.USER_NOT_FOUND);
             }
 
-            if (user.TotalLoginFail >= 3)
+            if (user.TotalLoginFail >= 30)
             {
                 var timelogin = DateTime.UtcNow - user.LastLoginFail;
                 if (timelogin.TotalMinutes < 30)

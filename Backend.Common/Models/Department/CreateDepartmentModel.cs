@@ -11,8 +11,7 @@ namespace Backend.Common
 {
     public class CreateDepartmentModel
     {
-        public int Id { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         [Required]
         [JsonProperty(PropertyName = "departmentName")]
         public string DepartmentName { get; set; }
@@ -21,13 +20,13 @@ namespace Backend.Common
         public DepartmentStatus Status { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonProperty(PropertyName = "departmentLogo")]
-        public string DepartmentLogo { get; set; }
+        public string? DepartmentLogo { get; set; }
 
         [JsonProperty(PropertyName = "usersInfo")]
-        public IList<UserMapDepartmentModel> UsersInfo { get; set; }
+        public IList<UserMapDepartmentModel>? UsersInfo { get; set; }
 
         [JsonProperty(PropertyName = "isLogoDelete")]
         public bool IsLogoDelete { get; set; }

@@ -1,5 +1,7 @@
-﻿using Backend.Common;
+﻿using AutoMapper;
+using Backend.Common;
 using Backend.Common.Models.User;
+using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,13 +19,26 @@ namespace Backend.Controllers
         protected readonly ILogger<BaseController> _logger;
         protected readonly IUserService _userService;
 
+        protected readonly MapperConfiguration _mapperConfig = new MapperConfiguration(cfg =>
+        {
+            cfg.CreateMap<CreateDepartmentModel, Department>();
+            cfg.CreateMap<CreateProjectModel, Project>();
+            cfg.CreateMap<UserInfoModel, User>();
+            cfg.CreateMap<User, UserInfoModel>();
+        });
+
+        protected Mapper _mapper;
+
         protected UserTokenModel CurrentUser { get { return GetUserIdentify(); } }
 
-        public BaseController(IUserService userService, IWebHostEnvironment webHostEnvironment, ILogger<BaseController> logger)
+        public BaseController(IUserService userService,
+            IWebHostEnvironment webHostEnvironment,
+            ILogger<BaseController> logger)
         {
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
             _userService = userService;
+            _mapper = new Mapper(_mapperConfig);
         }
 
         

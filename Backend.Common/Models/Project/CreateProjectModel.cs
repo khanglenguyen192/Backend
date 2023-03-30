@@ -11,27 +11,18 @@ namespace Backend.Common
 {
     public class CreateProjectModel
     {
-        public int Id { get; set; }
         [Required]
         [JsonProperty(PropertyName = "projectname")]
-        public string ProjectName { get; set; }
-        [Required]
+        public string? ProjectName { get; set; }
         [JsonProperty(PropertyName = "status")]
-        public ProjectStatus Status { get; set; }
-        [Required]
+        public ProjectStatus? Status { get; set; }
         [JsonProperty(PropertyName = "customerName")]
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
 
         [JsonProperty(PropertyName = "description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         [JsonProperty(PropertyName = "projectlogo")]
-        public string ProjectLogo { get; set; }
-
-        [JsonProperty(PropertyName = "member")]
-        public string Member { get; set; }
-
-        [JsonProperty(PropertyName = "islogodelete")]
-        public bool IsLogoDelete { get; set; }
+        public string? ProjectLogo { get; set; }
     }
 }
