@@ -9,8 +9,8 @@ namespace Backend.Services
 {
     public interface IReportService
     {
-        DailyReportModel GetDailyReportById(int id);
-        List<DailyReportModel> GetDailyReports(int userId);
-        DailyReportModel CreateDailyReport(DailyReportModel DailyReportModel, int userId);
+        TicketModel GetDailyReportById(int id);
+        List<TicketModel> GetDailyReports(int userId);
+        TicketModel CreateDailyReport(TicketModel DailyReportModel, int userId);
     }
 }

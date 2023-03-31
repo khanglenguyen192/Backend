@@ -20,6 +20,7 @@ namespace Backend.DBContext
         List<TEntity> GetById(IEnumerable<int> id, bool includeDeactive = true);
 
         bool Exists(int id);
+        bool Exists(Expression<Func<TEntity, bool>> whereClause);
         TEntity GetBy(Expression<Func<TEntity, bool>> whereClause);
         TEntity FirstOrDefault(Expression<Func<TEntity, bool>> whereClause);
 

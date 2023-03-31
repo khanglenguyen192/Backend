@@ -9,19 +9,19 @@ namespace Backend.Services
 {
     public class ReportService : IReportService
     {
-        public DailyReportModel CreateDailyReport(DailyReportModel DailyReportModel, int userId)
+        public TicketModel CreateDailyReport(TicketModel DailyReportModel, int userId)
         {
-            return new DailyReportModel();
+            return new TicketModel();
         }
 
-        public DailyReportModel GetDailyReportById(int id)
+        public TicketModel GetDailyReportById(int id)
         {
-            return new DailyReportModel();
+            return new TicketModel();
         }
 
-        public List<DailyReportModel> GetDailyReports(int userId)
+        public List<TicketModel> GetDailyReports(int userId)
         {
-            return new List<DailyReportModel> { new DailyReportModel() };
+            return new List<TicketModel> { new TicketModel() };
         }
     }
 }

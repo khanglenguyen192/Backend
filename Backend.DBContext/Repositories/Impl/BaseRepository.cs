@@ -147,6 +147,14 @@ namespace Backend.DBContext
             }
         }
 
+        public virtual bool Exists(Expression<Func<TEntity, bool>> whereClause)
+        {
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                return context.Set<TEntity>().Any(whereClause);
+            }
+        }
+
         public virtual List<TEntity> GetById(IEnumerable<int> id, bool includeDeactive = true)
         {
             using (var context = ContextFactory.CreateDbContext())

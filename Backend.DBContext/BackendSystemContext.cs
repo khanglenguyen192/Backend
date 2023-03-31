@@ -40,7 +40,7 @@ namespace Backend.DBContext
         public DbSet<DepartmentUserMap> DepartmentUserMap { get; set; }
         public DbSet<DepartmentMap> DepartmentMap { get; set; }
         public DbSet<UserChecking> UserChecking { get; set; }
-        public DbSet<DailyReport> DailyReport { get; set; }
+        public DbSet<Ticket> Ticket { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

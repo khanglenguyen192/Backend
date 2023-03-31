@@ -25,6 +25,13 @@ namespace Backend.Controllers
             cfg.CreateMap<CreateProjectModel, Project>();
             cfg.CreateMap<UserInfoModel, User>();
             cfg.CreateMap<User, UserInfoModel>();
+            cfg.CreateMap<User, UserApiModel>();
+            cfg.CreateMap<UserApiModel, User>();
+            cfg.CreateMap<UpdateUserModel, User>();
+            cfg.CreateMap<Ticket, TicketRequestModel>();
+            cfg.CreateMap<TicketRequestModel, Ticket>();
+            cfg.CreateMap<Ticket, TicketModel>();
+            cfg.CreateMap<TicketModel, Ticket>();
         });
 
         protected Mapper _mapper;

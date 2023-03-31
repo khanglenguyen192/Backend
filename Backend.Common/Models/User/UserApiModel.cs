@@ -11,29 +11,24 @@ namespace Backend.Common
 {
     public class UserApiModel
     {
-        public UserApiModel()
-        {
-            GenderModel = new HardcodeModel();
-            RoleModel = new HardcodeModel();
-        }
         [JsonProperty(PropertyName = "userid")]
         public int UserId { get; set; }
         [JsonProperty(PropertyName = "usercode")]
-        public string UserCode { get; set; }
+        public string? UserCode { get; set; }
         [JsonProperty(PropertyName = "avatar")]
-        public string Avatar { get; set; }
+        public string? Avatar { get; set; }
 
         [JsonProperty(PropertyName = "email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonProperty(PropertyName = "fullname")]
-        public string FullName { get; set; }
+        public string? FullName { get; set; }
 
         [JsonProperty(PropertyName = "username")]
-        public string UserName { get; set; }
+        public string? UserName { get; set; }
 
         [JsonProperty(PropertyName = "phone")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         [JsonProperty(PropertyName = "gender")]
         public Gender Gender { get; set; }
@@ -41,24 +36,20 @@ namespace Backend.Common
         [JsonProperty(PropertyName = "salaryType")]
         public SalaryType SalaryType { get; set; }
 
-        public HardcodeModel GenderModel { get; set; }
-
         [JsonProperty(PropertyName = "address")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         [JsonProperty(PropertyName = "role")]
         public UserRole Role { get; set; }
-
-        public HardcodeModel RoleModel { get; set; }
 
         [JsonProperty(PropertyName = "isinterns")]
         public bool IsInterns { get; set; }
 
         [JsonProperty(PropertyName = "birthday")]
-        public string Birthday { get; set; }
+        public string? Birthday { get; set; }
 
         [JsonProperty(PropertyName = "dateJoincompany")]
-        public string DateJoinCompany { get; set; }
+        public string? DateJoinCompany { get; set; }
 
         [JsonProperty(PropertyName = "hoursalary")]
         public double HourSalary { get; set; }
@@ -88,19 +79,19 @@ namespace Backend.Common
         public long SalaryPerformance { get; set; }
 
         [JsonProperty(PropertyName = "bankAccount")]
-        public string BankAccount { get; set; }
+        public string? BankAccount { get; set; }
 
         [JsonProperty(PropertyName = "timeZone")]
-        public string TimeZone { get; set; }
+        public string? TimeZone { get; set; }
 
         [JsonProperty(PropertyName = "skypeId")]
-        public string SkypeId { get; set; }
+        public string? SkypeId { get; set; }
 
         [JsonProperty(PropertyName = "linkedId")]
-        public string LinkedId { get; set; }
+        public string? LinkedId { get; set; }
 
         [JsonProperty(PropertyName = "facebookId")]
-        public string FacebookId { get; set; }
+        public string? FacebookId { get; set; }
 
 
         [JsonProperty(PropertyName = "isavatardelete")]

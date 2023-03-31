@@ -196,5 +196,14 @@ namespace Backend.Entities
             AllUnread,
             Celebrator
         }
+
+        public enum TicketStatus
+        {
+            Open = 0,
+            InProgress,
+            InReview,
+            Done,
+            Pending
+        }
     }
 }
