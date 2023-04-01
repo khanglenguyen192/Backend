@@ -171,7 +171,7 @@ namespace Backend.Controllers
                 {
                     foreach (var file in files)
                     {
-                        //TODO: handle upload file here
+                        FileUtils.FileUpload(Constants.UserDataFolderName, file);
                     }
                 }
 

@@ -73,7 +73,7 @@ namespace Backend.Controllers
         [Route("update-user")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel UpdateUser(int userId, [FromBody] UpdateUserModel model)
+        public ResponseModel UpdateUser(int userId, [FromBody] UpdateUserModel model, IFormFile image)
         {
             try
             {
@@ -82,6 +82,11 @@ namespace Backend.Controllers
                     return ResponseUtil.GetBadRequestResult("user_not_found");
 
                 user = _mapper.Map<UpdateUserModel, User>(model);
+
+                if (image != null)
+                {
+                    user.Avatar = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
+                }
 
                 _userRepository.Update(user);
 
