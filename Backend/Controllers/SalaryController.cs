@@ -1,4 +1,5 @@
 ﻿using Backend.Common;
+using Backend.DBContext;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,8 @@ namespace Backend.Controllers
         public SalaryController(ISalaryService salaryService,
                                 IUserService userService,
                                 IWebHostEnvironment webHostEnvironment,
-                                ILogger<BaseController> logger) : base(userService, webHostEnvironment, logger)
+                                ILogger<BaseController> logger,
+                                IUserRepository userRepository) : base(userService, webHostEnvironment, logger, userRepository)
         {
             _salaryService = salaryService;
         }

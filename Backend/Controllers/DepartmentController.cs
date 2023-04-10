@@ -13,7 +13,6 @@ namespace Backend.Controllers
     [ApiController]
     public class DepartmentController : BaseController
     {
-        private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
         private readonly IDepartmentMapRepository _departmentMapRepository;
         private readonly IDepartmentUserMapRepository _departmentUserMapRepository;
@@ -27,9 +26,8 @@ namespace Backend.Controllers
                                     IDepartmentMapRepository departmentMapRepository,
                                     IDepartmentUserMapRepository departmentUserMapRepository,
                                     IRoleRepository roleRepository) 
-            : base(userService, webHostEnvironment, logger)
+            : base(userService, webHostEnvironment, logger, userRepository)
         {
-            _userRepository = userRepository;
             _departmentRepository = departmentRepository;
             _departmentMapRepository = departmentMapRepository;
             _departmentUserMapRepository = departmentUserMapRepository;
@@ -65,6 +63,31 @@ namespace Backend.Controllers
                     departmentMap.DepartmentId = department.Id;
                     departmentMap.ParentDepartmentId = parentDepartment.Id;
                     _departmentMapRepository.Insert(departmentMap);
+                }
+
+                if (model.Users != null)
+                {
+                    foreach (var userModel in model.Users)
+                    {
+                        var user = _userRepository.FirstOrDefault(u => u.Id == userModel.Id && !u.IsDeactivate);
+                        if (user != null)
+                        {
+                            DepartmentUserMap departmentUserMap = new DepartmentUserMap();
+                            departmentUserMap.UserId = userModel.Id;
+                            departmentUserMap.DepartmentId = department.Id;
+                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
+                            if (role != null)
+                            {
+                                departmentUserMap.RoleId = role.Id;
+                            }
+                            else
+                            {
+                                departmentUserMap.RoleId = 3; //Default role Employee to department
+                            }
+
+                            _departmentUserMapRepository.Insert(departmentUserMap);
+                        }
+                    }
                 }
 
                 return ResponseUtil.GetOKResult(department);
@@ -143,7 +166,7 @@ namespace Backend.Controllers
                                 departmentUserMap.RoleId = role.Id;
                             }
                             else
-                            {
+                            {                                                                                                            
                                 departmentUserMap.RoleId = 3; //Default role Employee to department
                             }
 
@@ -164,7 +187,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("get-department-users")]
         [Authorize]
-        public ResponseModel AddUsersToDepartment([FromBody] int departmentId)
+        public ResponseModel GetDepartmentUsers([FromBody] int departmentId)
         {
             try
             {
@@ -208,11 +231,12 @@ namespace Backend.Controllers
         {
             try
             {
-                var departmentIds = _departmentUserMapRepository.GetAll(d => d.UserId == employeeId && !d.IsDeactivate)?.Select(p => p.DepartmentId);
+                var departmentIds = _departmentUserMapRepository.GetAll(d => d.UserId == employeeId && !d.IsDeactivate)?.Select(p => p.DepartmentId).ToList();
 
                 if (departmentIds != null)
                 {
-                    ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => departmentIds.Contains(d.Id) && !d.IsDeactivate));
+                    var departments = _departmentRepository.GetAll(d => departmentIds.Contains(d.Id) && !d.IsDeactivate);
+                    return ResponseUtil.GetOKResult(departments);
                 }
 
                 return ResponseUtil.GetOKResult(null);
@@ -239,7 +263,7 @@ namespace Backend.Controllers
 
                 if (childDepartmentIds != null)
                 {
-                    ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => childDepartmentIds.Contains(d.Id) && !d.IsDeactivate));
+                    return ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => childDepartmentIds.Contains(d.Id) && !d.IsDeactivate));
                 }
 
                 return ResponseUtil.GetOKResult(null);

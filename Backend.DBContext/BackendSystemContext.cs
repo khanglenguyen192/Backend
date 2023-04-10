@@ -41,6 +41,7 @@ namespace Backend.DBContext
         public DbSet<DepartmentMap> DepartmentMap { get; set; }
         public DbSet<UserChecking> UserChecking { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
+        public DbSet<Report> Report { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

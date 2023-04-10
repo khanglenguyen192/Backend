@@ -16,9 +16,12 @@ namespace Backend.Entities
         public int AssigneeId { get; set; }
         [ForeignKey("AssigneeId")]
         public virtual User Assignee { get; set; }
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         public virtual Project Project { get; set; }
+        public int? DepartmentId { get; set; }
+        [ForeignKey("DepartmentId")]
+        public virtual Department Department { get; set; }
         public string? Content { get; set; }
         public TicketStatus TicketStatus { get; set; }
         public string? TeamsNoitifyId { get; set; }

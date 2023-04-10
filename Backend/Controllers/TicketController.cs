@@ -12,24 +12,25 @@ namespace Backend.Controllers
     [ApiController]
     public class TicketController : BaseController
     {
-        private readonly IUserRepository _userRepository;
         private readonly ITicketRepository _ticketRepository;
+        private readonly IReportRepository _reportRepository;
 
         public TicketController(IUserService userService,
                                 IWebHostEnvironment webHostEnvironment,
                                 ILogger<BaseController> logger,
                                 IUserRepository userRepository,
-                                ITicketRepository ticketRepository) : base(userService, webHostEnvironment, logger)
+                                ITicketRepository ticketRepository,
+                                IReportRepository reportRepository) : base(userService, webHostEnvironment, logger, userRepository)
         {
-            _userRepository = userRepository;
             _ticketRepository = ticketRepository;
+            _reportRepository = reportRepository;
         }
 
         [HttpPost]
-        [Produces("application/json")]
+        [Produces("multipart/form-data")]
         [Route("create")]
         [Authorize]
-        public ResponseModel CreateTicket([FromBody]TicketRequestModel model)
+        public ResponseModel CreateTicket([FromBody]TicketRequestModel model, [FromForm] List<IFormFile> files)
         {
             try
             {
@@ -197,6 +198,73 @@ namespace Backend.Controllers
                     return ResponseUtil.GetBadRequestResult("ticket_not_found");
 
                 return ResponseUtil.GetOKResult(ticket);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("create-report")]
+        [Authorize]
+        public ResponseModel CreateReport([FromBody] ReportModel model, IList<IFormFile> files)
+        {
+            try
+            {
+                var ticket = _ticketRepository.FirstOrDefault(t => t.Id == model.TicketId && !t.IsDeactivate);
+
+                if (ticket == null)
+                    return ResponseUtil.GetBadRequestResult("ticket_not_found");
+
+                Report report = _mapper.Map<ReportModel, Report>(model);
+
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                    }
+                }
+
+                _reportRepository.Insert(report);
+                return ResponseUtil.GetOKResult(report);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("update-report")]
+        [Authorize]
+        public ResponseModel UpdateReport([FromBody] UpdateReportModel model, IList<IFormFile> files)
+        {
+            try
+            {
+                var ticket = _ticketRepository.FirstOrDefault(t => t.Id == model.TicketId && !t.IsDeactivate);
+
+                if (ticket == null)
+                    return ResponseUtil.GetBadRequestResult("ticket_not_found");
+
+                var report = _reportRepository.FirstOrDefault(p => p.Id == model.ReportId && !p.IsDeactivate);
+
+                if (report == null)
+                    return ResponseUtil.GetBadRequestResult("report_not_found");
+
+                report = _mapper.Map<UpdateReportModel, Report>(model);
+
+                if (files != null)
+                {
+                    foreach (var file in files)
+                    {
+                    }
+                }
+
+                _reportRepository.Update(report);
+                return ResponseUtil.GetOKResult(report);
             }
             catch (Exception ex)
             {

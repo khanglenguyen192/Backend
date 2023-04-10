@@ -33,7 +33,7 @@ builder.Services.AddSwaggerGen(setup =>
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = JwtBearerDefaults.AuthenticationScheme,
-        Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+        Description = "JWT Authentication",
 
         Reference = new OpenApiReference
         {
@@ -97,6 +97,8 @@ builder.Services.AddTransient<IRoleRepository, RoleRepository>();
 builder.Services.AddTransient<IProjectRepository, ProjectRepository>();
 builder.Services.AddTransient<IProjectUserMapRepository, ProjectUserMapRepository>();
 builder.Services.AddTransient<ITicketRepository, TicketRepository>();
+builder.Services.AddTransient<ISpecialDayRepository, SpecialDayRepository>();
+builder.Services.AddTransient<IReportRepository, ReportRepository>();
 #endregion
 
 var securityConfig = builder.Configuration.GetSection("SecurityConfig").Get<SecurityConfig>();
@@ -121,11 +123,13 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

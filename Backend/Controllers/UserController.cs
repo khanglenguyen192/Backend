@@ -4,21 +4,19 @@ using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Backend.Controllers
 {
     [Route("api/users")]
     public class UserController : BaseController
     {
-        private readonly IUserRepository _userRepository;
-
         public UserController(
             IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
-            IUserRepository userRepository) : base(userService, webHostEnvironment, logger)
+            IUserRepository userRepository) : base(userService, webHostEnvironment, logger, userRepository)
         {
-            _userRepository= userRepository;
         }
 
         [HttpPost]
@@ -91,6 +89,35 @@ namespace Backend.Controllers
                 _userRepository.Update(user);
 
                 return ResponseUtil.GetOKResult(model);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("reset-password")]
+        [Authorize(Roles = "Administrator")]
+        public ResponseModel ResetPassword(int userId)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+
+                if (user == null)
+                {
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
+                }
+                else
+                {
+                    user.Salt = Guid.NewGuid().ToString().Replace("-", "");
+                    user.PassCode = CommonUtils.GeneratePasscode(Constants.DEFAULT_PASSCODE, user.Salt);
+                    user.IsFirstLogin = true;
+                    _userRepository.Update(user);
+                    return ResponseUtil.GetOKResult("Success");
+                }
             }
             catch (Exception ex)
             {

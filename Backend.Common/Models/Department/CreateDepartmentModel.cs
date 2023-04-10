@@ -25,10 +25,8 @@ namespace Backend.Common
         [JsonProperty(PropertyName = "departmentLogo")]
         public string? DepartmentLogo { get; set; }
 
-        [JsonProperty(PropertyName = "usersInfo")]
-        public IList<UserMapDepartmentModel>? UsersInfo { get; set; }
+        [JsonProperty(PropertyName = "users")]
+        public IList<UserMapDepartmentModel>? Users { get; set; }
 
-        [JsonProperty(PropertyName = "isLogoDelete")]
-        public bool IsLogoDelete { get; set; }
     }
 }

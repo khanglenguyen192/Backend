@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Backend.Common;
 using Backend.Common.Models.User;
+using Backend.DBContext;
 using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Http;
@@ -18,11 +19,13 @@ namespace Backend.Controllers
         protected readonly IWebHostEnvironment _webHostEnvironment;
         protected readonly ILogger<BaseController> _logger;
         protected readonly IUserService _userService;
+        protected readonly IUserRepository _userRepository;
 
         protected readonly MapperConfiguration _mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<CreateDepartmentModel, Department>();
             cfg.CreateMap<CreateProjectModel, Project>();
+            cfg.CreateMap<UpdateProjectModel, Project>();
             cfg.CreateMap<UserInfoModel, User>();
             cfg.CreateMap<User, UserInfoModel>();
             cfg.CreateMap<User, UserApiModel>();
@@ -32,6 +35,10 @@ namespace Backend.Controllers
             cfg.CreateMap<TicketRequestModel, Ticket>();
             cfg.CreateMap<Ticket, TicketModel>();
             cfg.CreateMap<TicketModel, Ticket>();
+            cfg.CreateMap<ReportModel, Report>();
+            cfg.CreateMap<Report, ReportModel>();
+            cfg.CreateMap<UpdateReportModel, Report>();
+            cfg.CreateMap<Report, UpdateReportModel>();
         });
 
         protected Mapper _mapper;
@@ -40,15 +47,15 @@ namespace Backend.Controllers
 
         public BaseController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
-            ILogger<BaseController> logger)
+            ILogger<BaseController> logger,
+            IUserRepository userRepository)
         {
             _webHostEnvironment = webHostEnvironment;
             _logger = logger;
             _userService = userService;
             _mapper = new Mapper(_mapperConfig);
+            _userRepository = userRepository;
         }
-
-        
 
         protected UserTokenModel GetUserIdentify()
         {
@@ -56,7 +63,8 @@ namespace Backend.Controllers
 
             var identity = HttpContext.User.Identity as System.Security.Claims.ClaimsIdentity;
 
-            if (identity == null) return null;
+            if (identity == null)
+                return null;
 
             userModel.UserId = Convert.ToInt32(identity.Name);
 

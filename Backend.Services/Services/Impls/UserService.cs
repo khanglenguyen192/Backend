@@ -75,7 +75,7 @@ namespace Backend.Services
                     LoginResponseModel data = new LoginResponseModel();
                     data.IsFirstLogin = user.IsFirstLogin;
                     //Get Token
-                    int expireToken = 5;
+                    int expireToken = 60;
                     data.Token = _jwtHandler.Create(user.Id.ToString(), expireToken, user.Role);
                     data.Avatar = CommonUtils.GetDisplayImageUrl(user.Avatar);
                     data.FullName = user.FullName;

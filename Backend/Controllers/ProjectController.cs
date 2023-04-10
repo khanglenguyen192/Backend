@@ -13,7 +13,6 @@ namespace Backend.Controllers
     [ApiController]
     public class ProjectController : BaseController
     {
-        private readonly IUserRepository _userRepository;
         private readonly IProjectRepository _projectRepository;
         private readonly IProjectUserMapRepository _projectUserMapRepository;
 
@@ -23,16 +22,15 @@ namespace Backend.Controllers
                                  IUserRepository userRepository,
                                  IProjectRepository projectRepository,
                                  IProjectUserMapRepository projectUserMapRepository)
-            : base(userService, webHostEnvironment, logger)
+            : base(userService, webHostEnvironment, logger, userRepository)
         {
-            _userRepository = userRepository;
             _projectRepository = projectRepository;
             _projectUserMapRepository = projectUserMapRepository;
         }
 
         [HttpPost]
         [Produces("application/json")]
-        [Route("create-project")]
+        [Route("create")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
         public ResponseModel CreateProject([FromBody] CreateProjectModel model)
@@ -54,9 +52,64 @@ namespace Backend.Controllers
             }
         }
 
+        [HttpDelete]
+        [Produces("application/json")]
+        [Route("remove")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel Remove([FromBody] int projectId)
+        {
+            try
+            {
+                var project = _projectRepository.FirstOrDefault(p => p.Id == projectId && !p.IsDeactivate);
+                if (project == null)
+                    return ResponseUtil.GetBadRequestResult("Project not found");
+
+                project.IsDeactivate = true;
+                _projectRepository.Update(project);
+
+                var projectUsers = _projectUserMapRepository.GetAll(p => p.ProjectId == projectId && !p.IsDeactivate);
+
+                if (projectUsers != null)
+                {
+                    foreach(var user in projectUsers)
+                    {
+                        user.IsDeactivate = true;
+                        _projectUserMapRepository.Update(user);
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(project);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Route("update")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel UpdateProject([FromBody] UpdateProjectModel model, IFormFile projectLogo)
+        {
+            try
+            {
+                Project project = _mapper.Map<UpdateProjectModel, Project>(model);
+                project.ProjectLogo = FileUtils.ImageUpload(Constants.UserDataFolderName, projectLogo);
+                _projectRepository.Update(project);
+
+                return ResponseUtil.GetOKResult(project);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
         [HttpPost]
         [Produces("application/json")]
-        [Route("add-project-users")]
+        [Route("add-users")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
         public ResponseModel AddProjectUsers([FromBody] AddProjectUsersModel model)
@@ -67,6 +120,8 @@ namespace Backend.Controllers
 
                 if (project == null)
                     return ResponseUtil.GetBadRequestResult("Project not found");
+
+                List<ProjectUserMap> users = new List<ProjectUserMap>();
 
                 if (model.UserIds !=null)
                 {
@@ -85,17 +140,20 @@ namespace Backend.Controllers
                                     projectUser.IsLeader = true;
 
                                 _projectUserMapRepository.Insert(projectUser);
+
+                                users.Add(projectUser);
                             }
                             else if (projectUserMap != null && projectUserMap.IsDeactivate)
                             {
                                 projectUserMap.IsDeactivate = false;
                                 _projectUserMapRepository.Update(projectUserMap);
+                                users.Add(projectUserMap);
                             }
                         }
                     }
                 }
 
-                return ResponseUtil.GetOKResult("SUCCESS");
+                return ResponseUtil.GetOKResult(users);
             }
             catch (Exception ex)
             {
@@ -105,7 +163,7 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Produces("application/json")]
-        [Route("get-project-users")]
+        [Route("get-users")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
         public ResponseModel GetProjectUsers(int projectId)
@@ -129,7 +187,7 @@ namespace Backend.Controllers
                     if (user != null)
                     {
                         UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
-                        if (leader.UserId == user.Id)
+                        if (leader?.UserId == user.Id)
                             userInfoModel.IsLeader = true;
                         response.Add(userInfoModel);
                     }
@@ -139,6 +197,107 @@ namespace Backend.Controllers
                     return ResponseUtil.GetOKResult(response);
 
                 return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("remove-users")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel RemoveProjectUsers([FromBody] AddProjectUsersModel model)
+        {
+            try
+            {
+                var project = _projectRepository.FirstOrDefault(p => p.Id == model.ProjectId && !p.IsDeactivate);
+
+                if (project == null)
+                    return ResponseUtil.GetBadRequestResult("Project not found");
+
+                List<ProjectUserMap> users = new List<ProjectUserMap>();
+
+                if (model.UserIds != null)
+                {
+                    foreach (var userId in model.UserIds)
+                    {
+                        var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                        if (user != null)
+                        {
+                            var projectUserMap = _projectUserMapRepository.FirstOrDefault(p => p.ProjectId == model.ProjectId && p.UserId == userId && !p.IsDeactivate);
+                            if (projectUserMap != null)
+                            {
+                                projectUserMap.IsDeactivate = true;
+                                _projectUserMapRepository.Update(projectUserMap);
+                                users.Add(projectUserMap);
+                            }
+                        }
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(users);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("update-status")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel UpdateStatus([FromBody] ProjectStatusModel model)
+        {
+            try
+            {
+                var project = _projectRepository.FirstOrDefault(p => p.Id == model.ProjectId && !p.IsDeactivate);
+
+                if (project == null)
+                    return ResponseUtil.GetBadRequestResult("Project not found");
+
+                project.Status = model.ProjectStatus;
+                _projectRepository.Update(project);
+
+                return ResponseUtil.GetOKResult(project);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-by-user")]
+        //[Authorize(Roles = "Administrator")]
+        [Authorize]
+        public ResponseModel GetByUser(int userId)
+        {
+            try
+            {
+                if (_userRepository.Exists(u => u.Id == userId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                var projectIds = _projectUserMapRepository.GetAll(p => p.UserId == userId && !p.IsDeactivate)?.Select(p => p.ProjectId);
+
+                List<Project> projects = new List<Project>();
+
+                if (projectIds != null)
+                {
+                    foreach (var projectId in projectIds)
+                    {
+                        var project = _projectRepository.FirstOrDefault(p => p.Id == projectId && !p.IsDeactivate);
+                        if (project != null)
+                            projects.Add(project);
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(projects);
             }
             catch (Exception ex)
             {
