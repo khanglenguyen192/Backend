@@ -42,6 +42,8 @@ namespace Backend.DBContext
         public DbSet<UserChecking> UserChecking { get; set; }
         public DbSet<Ticket> Ticket { get; set; }
         public DbSet<Report> Report { get; set; }
+        public DbSet<ReportFile> ReportFile { get; set; }
+        public DbSet<TicketFile> TicketFile { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

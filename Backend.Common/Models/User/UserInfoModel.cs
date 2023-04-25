@@ -26,5 +26,6 @@ namespace Backend.Common
         public DateTime Birthday { get; set; }
         public DateTime DateJoinCompany { get; set; }
         public string? BankAccount { get; set; }
+        public int? DepartmentRole { get; set; }
     }
 }

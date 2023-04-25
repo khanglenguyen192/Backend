@@ -183,11 +183,11 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Produces("application/json")]
         [Route("get-department-users")]
         [Authorize]
-        public ResponseModel GetDepartmentUsers([FromBody] int departmentId)
+        public ResponseModel GetDepartmentUsers(int departmentId)
         {
             try
             {
@@ -195,18 +195,19 @@ namespace Backend.Controllers
                 if (department == null)
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
 
-                var userIds = _departmentUserMapRepository.GetAll(d => d.Id == departmentId && !d.IsDeactivate)?.Select(p => p.UserId);
+                var departmentUsers = _departmentUserMapRepository.GetAll(d => d.DepartmentId == departmentId && !d.IsDeactivate);
 
                 List<UserInfoModel> response = new List<UserInfoModel>();
 
-                if (userIds != null)
+                if (departmentUsers != null)
                 {
-                    foreach (var userId in userIds)
+                    foreach (var departmentUser in departmentUsers)
                     {
-                        var user = _userRepository.FirstOrDefault(p => p.Id == userId && !p.IsDeactivate);
+                        var user = _userRepository.FirstOrDefault(p => p.Id == departmentUser.UserId && !p.IsDeactivate);
                         if (user != null)
                         {
                             UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
+                            userInfoModel.DepartmentRole = departmentUser.RoleId;
                             response.Add(userInfoModel);
                         }
                     }

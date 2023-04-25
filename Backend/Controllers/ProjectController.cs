@@ -91,7 +91,7 @@ namespace Backend.Controllers
         [Route("update")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel UpdateProject([FromBody] UpdateProjectModel model, IFormFile projectLogo)
+        public ResponseModel UpdateProject([FromForm]UpdateProjectModel model, IFormFile projectLogo)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Backend.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,7 @@ namespace Backend.Common
         public TicketStatus TicketStatus { get; set; }
 
         public int ProjectId { get; set; }
+
+        public IList<TicketFile>? TicketFiles { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace Backend.Common
 
         public TicketStatus TicketStatus { get; set; }
 
-        public int ProjectId { get; set; }
+        public int? ProjectId { get; set; }
+        public int? DepartmentId { get; set; }
     }
 }
