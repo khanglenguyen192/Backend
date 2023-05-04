@@ -14,13 +14,16 @@ namespace Backend.Common
         public int Id { get; set; }
 
         public int AssignorId { get; set; }
+        public string? AssignorName { get; set; }
 
         public int AssigneeId { get; set; }
+        public string? AssigneeName { get; set; }
 
         public DateTime Created { get; set; }
 
         public DateTime Modified { get; set; }
 
+        public string? Title { get; set; }
         public string? Content { get; set; }
 
         public TicketStatus TicketStatus { get; set; }
@@ -28,5 +31,6 @@ namespace Backend.Common
         public int ProjectId { get; set; }
 
         public IList<TicketFile>? TicketFiles { get; set; }
+        public IList<Report>? Reports { get; set; }
     }
 }

@@ -39,6 +39,8 @@ namespace Backend.Controllers
             cfg.CreateMap<Report, ReportModel>();
             cfg.CreateMap<UpdateReportModel, Report>();
             cfg.CreateMap<Report, UpdateReportModel>();
+            cfg.CreateMap<Report, ReportResponseModel>();
+            cfg.CreateMap<ReportResponseModel, Report>();
         });
 
         protected Mapper _mapper;

@@ -11,6 +11,8 @@ namespace Backend.Common
     {
         public int TicketId { get; set; }
 
+        public string? Title { get; set; }
+
         public string? Content { get; set; }
 
         public TicketStatus TicketStatus { get; set; }

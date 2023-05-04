@@ -1,10 +1,12 @@
 ﻿using Backend.Common;
+using Backend.Common.Models.Common;
 using Backend.DBContext;
 using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Sockets;
 
 namespace Backend.Controllers
 {
@@ -68,7 +70,8 @@ namespace Backend.Controllers
                             {
                                 TicketId = ticket.Id,
                                 FileName = savedFileName,
-                                DisplayName = file.FileName
+                                DisplayName = file.FileName,
+                                Size = file.Length
                             };
                             _ticketFileRepository.Insert(ticketFile);
                         }
@@ -149,11 +152,21 @@ namespace Backend.Controllers
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.REPORT_NOT_FOUND);
 
                 var result = _mapper.Map<Ticket, TicketModel>(ticket);
+                string assignorName = _userRepository.GetById(ticket.AssignorId)?.FullName ?? string.Empty;
+                string assigneeName = _userRepository.GetById(ticket.AssigneeId)?.FullName ?? string.Empty;
+                result.AssignorName = assignorName;
+                result.AssigneeName = assigneeName;
 
                 List<TicketFile> ticketFiles = _ticketFileRepository.GetAll(t => t.TicketId == ticketId && !t.IsDeactivate);
                 if (ticketFiles != null && ticketFiles.Any())
                 {
                     result.TicketFiles = ticketFiles;
+                }
+
+                List<Report> reports = _reportRepository.GetAll(r => r.TicketId == ticketId);
+                if (reports != null && reports.Any())
+                {
+                    result.Reports = reports;
                 }
 
                 return ResponseUtil.GetOKResult(result);
@@ -168,11 +181,34 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("search")]
         [Authorize]
-        public ResponseModel SearchTicket([FromBody]SearchTicketModel searchModel)
+        public ResponseModel SearchTicket([FromBody] SearchTicketModel searchModel)
         {
             try
             {
-                return ResponseUtil.GetOKResult(null);
+                var queryResult = _ticketRepository.SearchTicket(searchModel);
+                IList<TicketModel> ticketModels = new List<TicketModel>();
+                if (queryResult.Data != null)
+                {
+                    foreach (var ticket in queryResult.Data)
+                    {
+                        var ticketModel = _mapper.Map<Ticket, TicketModel>(ticket);
+                        string assignorName = _userRepository.GetById(ticket.AssignorId)?.FullName ?? string.Empty;
+                        string assigneeName = _userRepository.GetById(ticket.AssigneeId)?.FullName ?? string.Empty;
+                        ticketModel.AssignorName = assignorName;
+                        ticketModel.AssigneeName = assigneeName;
+                        ticketModels.Add(ticketModel);
+                    }
+                }
+
+                var response = new PagingResponseModel<TicketModel>
+                {
+                    Data = ticketModels,
+                    PageIndex = queryResult.PageIndex,
+                    PageSize = queryResult.PageSize,
+                    TotalSize = queryResult.TotalSize,
+                };
+
+                return ResponseUtil.GetOKResult(response);
             }
             catch (Exception ex)
             {
@@ -182,9 +218,9 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Produces("application/json")]
-        [Route("submit")]
+        [Route("update")]
         [Authorize]
-        public ResponseModel SubmitTicket([FromForm]SubmitTicketModel model, IList<IFormFile> files)
+        public ResponseModel UpdateTicket([FromForm]SubmitTicketModel model, IList<IFormFile> files)
         {
             try
             {
@@ -195,14 +231,24 @@ namespace Backend.Controllers
 
                 ticket.TicketStatus = model.TicketStatus;
                 ticket.Content = model.Content;
+                ticket.Title = model.Title;
 
-                _ticketRepository.Update(ticket);
-
-                if (files != null)
+                if (_ticketRepository.Update(ticket) > 0 && files != null)
                 {
                     foreach (var file in files)
                     {
-                        FileUtils.FileUpload(Constants.UserDataFolderName, file);
+                        string savedFileName = FileUtils.FileUpload(Constants.UserDataFolderName, file);
+                        if (!string.IsNullOrWhiteSpace(savedFileName))
+                        {
+                            TicketFile ticketFile = new TicketFile
+                            {
+                                TicketId = ticket.Id,
+                                FileName = savedFileName,
+                                DisplayName = file.FileName
+                            };
+                            _ticketFileRepository.Update(ticketFile);
+                        }
+
                     }
                 }
 
@@ -250,9 +296,7 @@ namespace Backend.Controllers
 
                 Report report = _mapper.Map<ReportModel, Report>(model);
 
-                _reportRepository.Insert(report);
-
-                if (files != null)
+                if (_reportRepository.Insert(report) > 0 && files != null)
                 {
                     foreach (var file in files)
                     {
@@ -263,7 +307,8 @@ namespace Backend.Controllers
                             {
                                 ReportId = report.Id,
                                 FileName = savedFileName,
-                                DisplayName = file.FileName
+                                DisplayName = file.FileName,
+                                Size = file.Length
                             };
                             _reportFileRepository.Insert(reportFile);
                         }
@@ -307,6 +352,57 @@ namespace Backend.Controllers
 
                 _reportRepository.Update(report);
                 return ResponseUtil.GetOKResult(report);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-reports")]
+        [Authorize]
+        public ResponseModel GetReports(int ticketId)
+        {
+            try
+            {
+                var ticket = _ticketRepository.FirstOrDefault(t => t.Id == ticketId && !t.IsDeactivate);
+                if (ticket == null)
+                    return ResponseUtil.GetBadRequestResult("Ticket_not_found");
+
+                var reports = _reportRepository.GetAll(r => r.TicketId == ticketId);
+
+                return ResponseUtil.GetOKResult(reports);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-report")]
+        [Authorize]
+        public ResponseModel GetReport(int reportId)
+        {
+            try
+            {
+                var report = _reportRepository.FirstOrDefault(t => t.Id == reportId && !t.IsDeactivate);
+                if (report == null)
+                    return ResponseUtil.GetBadRequestResult("Report_not_found");
+
+                var result = _mapper.Map<Report, ReportResponseModel>(report);
+
+                var reportFiles = _reportFileRepository.GetAll(r => r.ReportId == reportId);
+
+                if (reportFiles != null && reportFiles.Any())
+                {
+                    result.ReportFiles = reportFiles;
+                }
+
+                return ResponseUtil.GetOKResult(result);
             }
             catch (Exception ex)
             {

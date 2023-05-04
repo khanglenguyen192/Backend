@@ -7,10 +7,8 @@ using static Backend.Entities.EnumUtil;
 
 namespace Backend.Common
 {
-    public class SearchTicketModel
+    public class SearchTicketModel : PagingModel
     {
-        public int? Id { get; set; }
-
         public int? AssignorId { get; set; }
 
         public int? AssigneeId { get; set; }
@@ -18,5 +16,7 @@ namespace Backend.Common
         public TicketStatus? TicketStatus { get; set; }
 
         public int? ProjectId { get; set; }
+
+        public int? DepartmentId { get; set; }
     }
 }

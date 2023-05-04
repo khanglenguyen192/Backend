@@ -10,9 +10,10 @@ namespace Backend.Entities
     public class ReportFile : BaseEntity
     {
         public int ReportId { get; set; }
-        [ForeignKey("TicketId")]
+        [ForeignKey("ReportId")]
         public Report Report { get; set; }
         public string? FileName { get; set; }
         public string? DisplayName { get; set; }
+        public long Size { get; set; }
     }
 }

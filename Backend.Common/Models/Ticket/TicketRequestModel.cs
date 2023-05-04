@@ -13,11 +13,10 @@ namespace Backend.Common
 
         public int AssigneeId { get; set; }
 
+        public string? Title { get; set; }
         public string? Content { get; set; }
 
         public TicketStatus TicketStatus { get; set; }
-
-        public int? ProjectId { get; set; }
         public int? DepartmentId { get; set; }
     }
 }

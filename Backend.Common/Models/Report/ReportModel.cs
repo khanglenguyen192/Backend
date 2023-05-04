@@ -11,6 +11,7 @@ namespace Backend.Common
     public class ReportModel
     {
         public int TicketId { get; set; }
+        public string? Title { get; set; }
         public string? Content { get; set; }
     }
 }

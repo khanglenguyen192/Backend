@@ -14,5 +14,6 @@ namespace Backend.Entities
         public Ticket Ticket { get; set; }
         public string? FileName { get; set; }
         public string? DisplayName { get; set; }
+        public long Size { get; set; }
     }
 }
