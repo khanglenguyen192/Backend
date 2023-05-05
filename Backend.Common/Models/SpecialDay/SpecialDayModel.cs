@@ -16,10 +16,7 @@ namespace Backend.Common
         public string? Reason { get; set; }
         public DayOffOption Option { get; set; }
         public bool IsUrgent { get; set; }
-        public DayOffStatus DayOffStatus { get; set; }
         public SpecialDayType Type { get; set; }
-        public HolidayType? HolidayType { get; set; }
-        public bool IsPaidOff { get; set; }
         public int? UserId { get; set; }
     }
 }

@@ -27,11 +27,22 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("create")]
         [Authorize]
-        public ResponseModel CreateSpecialDay([FromBody] SpecialDayModel model)
+        public ResponseModel CreateSpecialDay([FromBody] SpecialDayRequestModel model)
         {
             try
             {
-                return ResponseUtil.GetOKResult("Success");
+                IList<SpecialDay> result = new List<SpecialDay>();
+                if (model.SpecialDays != null)
+                {
+                    foreach (var specialDayModel in model.SpecialDays)
+                    {
+                        SpecialDay specialDay = _mapper.Map<SpecialDayModel, SpecialDay>(specialDayModel);
+                        _specialDayRepository.Insert(specialDay);
+                        result.Add(specialDay);
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(result);
             }
             catch (Exception ex)
             {
@@ -43,7 +54,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("delete")]
         [Authorize]
-        public ResponseModel CreateSpecialDay(int specialDayId)
+        public ResponseModel DeleteSpecialDay(int specialDayId)
         {
             try
             {

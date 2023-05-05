@@ -41,6 +41,8 @@ namespace Backend.Controllers
             cfg.CreateMap<Report, UpdateReportModel>();
             cfg.CreateMap<Report, ReportResponseModel>();
             cfg.CreateMap<ReportResponseModel, Report>();
+            cfg.CreateMap<SpecialDay, SpecialDayModel>();
+            cfg.CreateMap<SpecialDayModel, SpecialDay>();
         });
 
         protected Mapper _mapper;

@@ -163,7 +163,8 @@ namespace Backend.Controllers
                     result.TicketFiles = ticketFiles;
                 }
 
-                List<Report> reports = _reportRepository.GetAll(r => r.TicketId == ticketId);
+                IList<Report> reports = _reportRepository.GetAllWithOrderByDescending(whereClause: r => r.TicketId == ticketId,
+                                                                                     sortColumn: r => r.Created);
                 if (reports != null && reports.Any())
                 {
                     result.Reports = reports;
