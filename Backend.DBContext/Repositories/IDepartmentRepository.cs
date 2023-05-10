@@ -9,5 +9,6 @@ namespace Backend.DBContext
 {
     public interface IDepartmentRepository : IBaseRepository<Department>
     {
+        IList<Department> GetRootDepartments();
     }
 }

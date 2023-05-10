@@ -55,6 +55,9 @@ namespace Backend.Controllers
                 }
 
                 department.OwnerId = 1; //Default: Assign to root user
+
+                department.IsRoot = parentDepartment == null;
+
                 _departmentRepository.Insert(department);
 
                 if (parentDepartment != null)
@@ -107,6 +110,22 @@ namespace Backend.Controllers
             try
             {
                 return ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => d.OwnerId == userId && !d.IsDeactivate));
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-root-deparments")]
+        [Authorize]
+        public ResponseModel GetRootDepartments()
+        {
+            try
+            {
+                return ResponseUtil.GetOKResult(_departmentRepository.GetRootDepartments());
             }
             catch (Exception ex)
             {

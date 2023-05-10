@@ -1,4 +1,5 @@
 ﻿using Backend.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,17 @@ namespace Backend.DBContext
     {
         public DepartmentRepository(IDbContextFactory contextFactory) : base(contextFactory)
         {
+            
+        }
+
+        public IList<Department> GetRootDepartments()
+        {
+            using (var context = ContextFactory.CreateDbContext())
+            {
+                string sqlQuery = "SELECT * FROM Department AS d  ORDER BY d.Created";
+
+                return null;
+            }
         }
     }
 }
