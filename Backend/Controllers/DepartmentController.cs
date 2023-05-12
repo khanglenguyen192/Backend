@@ -22,12 +22,13 @@ namespace Backend.Controllers
         public DepartmentController(IUserService userService,
                                     IWebHostEnvironment webHostEnvironment,
                                     ILogger<BaseController> logger,
+                                    IJwtHandler jwtHandler,
                                     IUserRepository userRepository,
                                     IDepartmentRepository departmentRepository,
                                     IDepartmentMapRepository departmentMapRepository,
                                     IDepartmentUserMapRepository departmentUserMapRepository,
                                     IRoleRepository roleRepository) 
-            : base(userService, webHostEnvironment, logger, userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _departmentRepository = departmentRepository;
             _departmentMapRepository = departmentMapRepository;
@@ -288,6 +289,42 @@ namespace Backend.Controllers
                 }
 
                 return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-users-to-add")]
+        [Authorize]
+        public ResponseModel GetUsersToAdd(int departmentId, [FromHeader] string authorization)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var usersToAdd = _userRepository.GetUserToAddDepartment(departmentId);
+
+                List<UserInfoModel> response = new List<UserInfoModel>();
+
+                if (usersToAdd != null)
+                {
+                    foreach (var user in usersToAdd)
+                    {
+                        if (user != null)
+                        {
+                            UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
+                            response.Add(userInfoModel);
+                        }
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(response);
             }
             catch (Exception ex)
             {

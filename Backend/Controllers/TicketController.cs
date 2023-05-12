@@ -22,11 +22,12 @@ namespace Backend.Controllers
         public TicketController(IUserService userService,
                                 IWebHostEnvironment webHostEnvironment,
                                 ILogger<BaseController> logger,
+                                IJwtHandler jwtHandler,
                                 IUserRepository userRepository,
                                 ITicketRepository ticketRepository,
                                 IReportRepository reportRepository,
                                 ITicketFileRepository ticketFileRepository,
-                                IReportFileRepository reportFileRepository) : base(userService, webHostEnvironment, logger, userRepository)
+                                IReportFileRepository reportFileRepository) : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _ticketRepository = ticketRepository;
             _reportRepository = reportRepository;

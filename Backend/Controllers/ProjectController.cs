@@ -19,10 +19,11 @@ namespace Backend.Controllers
         public ProjectController(IUserService userService,
                                  IWebHostEnvironment webHostEnvironment,
                                  ILogger<BaseController> logger,
+                                 IJwtHandler jwtHandler,
                                  IUserRepository userRepository,
                                  IProjectRepository projectRepository,
                                  IProjectUserMapRepository projectUserMapRepository)
-            : base(userService, webHostEnvironment, logger, userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _projectRepository = projectRepository;
             _projectUserMapRepository = projectUserMapRepository;

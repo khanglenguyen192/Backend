@@ -17,7 +17,9 @@ namespace Backend.Controllers
                                 IUserService userService,
                                 IWebHostEnvironment webHostEnvironment,
                                 ILogger<BaseController> logger,
-                                IUserRepository userRepository) : base(userService, webHostEnvironment, logger, userRepository)
+                                IJwtHandler jwtHandler,
+                                IUserRepository userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _salaryService = salaryService;
         }

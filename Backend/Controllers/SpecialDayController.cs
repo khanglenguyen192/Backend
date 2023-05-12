@@ -16,9 +16,10 @@ namespace Backend.Controllers
         public SpecialDayController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
+            IJwtHandler jwtHandler,
             IUserRepository userRepository,
             ISpecialDayRepository specialDayRepository)
-            : base(userService, webHostEnvironment, logger, userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _specialDayRepository = specialDayRepository;
         }

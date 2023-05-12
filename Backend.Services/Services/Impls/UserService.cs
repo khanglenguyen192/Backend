@@ -3,6 +3,7 @@ using Backend.Common.Models.User;
 using Backend.DBContext;
 using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,6 +35,12 @@ namespace Backend.Services
             user.IsDeactivate = false;
 
             _userRepository.Insert(user);
+
+            if(string.IsNullOrWhiteSpace(user.UserCode))
+            {
+                user.UserCode = user.Id.ToString();
+                _userRepository.Update(user);
+            }
 
             return ResponseUtil.GetOKResult(user);
         }

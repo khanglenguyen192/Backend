@@ -9,6 +9,6 @@ namespace Backend.DBContext
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-
+        IList<User> GetUserToAddDepartment(int departmentId);
     }
 }

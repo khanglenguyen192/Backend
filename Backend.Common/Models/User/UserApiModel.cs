@@ -11,94 +11,59 @@ namespace Backend.Common
 {
     public class UserApiModel
     {
-        [JsonProperty(PropertyName = "userid")]
         public int UserId { get; set; }
-        [JsonProperty(PropertyName = "usercode")]
         public string? UserCode { get; set; }
-        [JsonProperty(PropertyName = "avatar")]
         public string? Avatar { get; set; }
 
-        [JsonProperty(PropertyName = "email")]
         public string? Email { get; set; }
 
-        [JsonProperty(PropertyName = "fullname")]
         public string? FullName { get; set; }
 
-        [JsonProperty(PropertyName = "username")]
         public string? UserName { get; set; }
 
-        [JsonProperty(PropertyName = "phone")]
         public string? Phone { get; set; }
 
-        [JsonProperty(PropertyName = "gender")]
         public Gender Gender { get; set; }
 
-        [JsonProperty(PropertyName = "salaryType")]
-        public SalaryType SalaryType { get; set; }
+        public SalaryType SalaryType { get; set; } = SalaryType.Net;
 
-        [JsonProperty(PropertyName = "address")]
         public string? Address { get; set; }
 
-        [JsonProperty(PropertyName = "role")]
         public UserRole Role { get; set; }
 
-        [JsonProperty(PropertyName = "isinterns")]
-        public bool IsInterns { get; set; }
-
-        [JsonProperty(PropertyName = "birthday")]
         public string? Birthday { get; set; }
 
-        [JsonProperty(PropertyName = "dateJoincompany")]
         public string? DateJoinCompany { get; set; }
 
-        [JsonProperty(PropertyName = "hoursalary")]
-        public double HourSalary { get; set; }
+        public double HourSalary { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "basicsalary")]
-        public long BasicSalary { get; set; }
+        public long BasicSalary { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "lunchmoney")]
-        public long LunchMoney { get; set; }
+        public long LunchMoney { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "telephonefee")]
-        public long TelephoneFee { get; set; }
+        public long TelephoneFee { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "petrolmoney")]
-        public long PetrolMoney { get; set; }
+        public long PetrolMoney { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "housingsupport")]
-        public long HousingSupport { get; set; }
+        public long HousingSupport { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "reduceyourself")]
-        public long ReduceYourself { get; set; }
+        public long ReduceYourself { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "realsalary")]
-        public long RealSalary { get; set; }
+        public long RealSalary { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "salaryperformance")]
-        public long SalaryPerformance { get; set; }
+        public long SalaryPerformance { get; set; } = 0;
 
-        [JsonProperty(PropertyName = "bankAccount")]
         public string? BankAccount { get; set; }
 
-        [JsonProperty(PropertyName = "timeZone")]
         public string? TimeZone { get; set; }
 
-        [JsonProperty(PropertyName = "skypeId")]
         public string? SkypeId { get; set; }
 
-        [JsonProperty(PropertyName = "linkedId")]
         public string? LinkedId { get; set; }
 
-        [JsonProperty(PropertyName = "facebookId")]
         public string? FacebookId { get; set; }
 
-
-        [JsonProperty(PropertyName = "isavatardelete")]
-        public bool IsAvatarDelete { get; set; }
-
-        [JsonProperty(PropertyName = "numberOfDenpendents")]
-        public int NumberOfDenpendents { get; set; }
+        public int NumberOfDenpendents { get; set; } = 0;
 
     }
 

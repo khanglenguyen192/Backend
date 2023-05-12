@@ -10,5 +10,9 @@ namespace Backend.Common
     public interface IJwtHandler
     {
         string Create(string id, int expireToken, UserRole role);
+
+        UserRole GetRoleFromToken(string token);
+
+        int GetUserIdFromToken(string token);
     }
 }

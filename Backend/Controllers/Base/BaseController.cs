@@ -20,6 +20,7 @@ namespace Backend.Controllers
         protected readonly ILogger<BaseController> _logger;
         protected readonly IUserService _userService;
         protected readonly IUserRepository _userRepository;
+        protected readonly IJwtHandler _jwtHandler;
 
         protected readonly MapperConfiguration _mapperConfig = new MapperConfiguration(cfg =>
         {
@@ -52,6 +53,7 @@ namespace Backend.Controllers
         public BaseController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
+            IJwtHandler jwtHandler,
             IUserRepository userRepository)
         {
             _webHostEnvironment = webHostEnvironment;
@@ -59,6 +61,7 @@ namespace Backend.Controllers
             _userService = userService;
             _mapper = new Mapper(_mapperConfig);
             _userRepository = userRepository;
+            _jwtHandler = jwtHandler;
         }
 
         protected UserTokenModel GetUserIdentify()
