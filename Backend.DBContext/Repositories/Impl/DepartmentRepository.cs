@@ -17,12 +17,7 @@ namespace Backend.DBContext
 
         public IList<Department> GetRootDepartments()
         {
-            using (var context = ContextFactory.CreateDbContext())
-            {
-                string sqlQuery = "SELECT * FROM Department AS d  ORDER BY d.Created";
-
-                return null;
-            }
+            return GetAll(d => d.IsRoot);
         }
     }
 }

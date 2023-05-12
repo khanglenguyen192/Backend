@@ -5,6 +5,7 @@ using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using static Backend.Entities.EnumUtil;
 
 namespace Backend.Controllers
@@ -121,7 +122,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("get-root-deparments")]
         [Authorize]
-        public ResponseModel GetRootDepartments()
+        public ResponseModel GetRootDepartments([FromHeader] string authorization)
         {
             try
             {

@@ -24,11 +24,11 @@ namespace Backend.Controllers
         [Route("create-user")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel CreateUser([FromBody] UserApiModel model)
+        public ResponseModel CreateUser([FromBody] UserApiModel model, [FromHeader] string authorization)
         {
             try
             {
-                var result = _userService.CreateUser(model, Entities.EnumUtil.UserRole.Administrator);
+                var result = _userService.CreateUser(model, model.Role);
                 if (result != null)
                 {
                     return ResponseUtil.GetOKResult(result);
