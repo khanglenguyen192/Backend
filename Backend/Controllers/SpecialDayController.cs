@@ -13,6 +13,8 @@ namespace Backend.Controllers
     public class SpecialDayController : BaseController
     {
         private readonly ISpecialDayRepository _specialDayRepository;
+        private readonly IUserRepository _userRepository;
+
         public SpecialDayController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
@@ -22,6 +24,7 @@ namespace Backend.Controllers
             : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _specialDayRepository = specialDayRepository;
+            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -38,12 +41,132 @@ namespace Backend.Controllers
                     foreach (var specialDayModel in model.SpecialDays)
                     {
                         SpecialDay specialDay = _mapper.Map<SpecialDayModel, SpecialDay>(specialDayModel);
+                        specialDay.DayOffStatus = EnumUtil.DayOffStatus.Waiting;
+                        var check = _specialDayRepository.FirstOrDefault(d => d.UserId == specialDay.UserId && d.DateTime == specialDay.DateTime);
+                        if (check != null)
+                        {
+                            _specialDayRepository.Delete(check);
+                        }
                         _specialDayRepository.Insert(specialDay);
                         result.Add(specialDay);
                     }
                 }
 
                 return ResponseUtil.GetOKResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-dayoff-emp")]
+        [Authorize]
+        public ResponseModel GetDayOffEmp(int userId)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
+
+                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId && d.Type == EnumUtil.SpecialDayType.DayOff)
+                                    .OrderByDescending(x => x.Created);
+
+                DayOffResponseModel response = new DayOffResponseModel();
+                response.DayOffs = new List<DayOffModel>();
+
+                if (listDays != null)
+                {
+                    foreach (var day in listDays)
+                    {
+                        var specialDays = _mapper.Map<SpecialDay, DayOffModel>(day);
+                        response.DayOffs.Add(specialDays);
+                    }
+                }
+
+                if (response.DayOffs.Any())
+                    return ResponseUtil.GetOKResult(response.DayOffs);
+
+                return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-approve-dayoff")]
+        [Authorize]
+        public ResponseModel GetApproveDayOffEmp(int userId)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
+
+                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId &&
+                                                            d.Type == EnumUtil.SpecialDayType.DayOff &&
+                                                            d.DayOffStatus == EnumUtil.DayOffStatus.Approve);
+
+                SpecialDayRequestModel response = new SpecialDayRequestModel();
+                response.SpecialDays = new List<SpecialDayModel>();
+
+                if (listDays != null)
+                {
+                    foreach (var day in listDays)
+                    {
+                        var specialDays = _mapper.Map<SpecialDay, SpecialDayModel>(day);
+                        response.SpecialDays.Add(specialDays);
+                    }
+                }
+
+                if (response.SpecialDays.Any())
+                    return ResponseUtil.GetOKResult(response.SpecialDays);
+
+                return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPut]
+        [Produces("application/json")]
+        [Route("handle-request-dayoff")]
+        [Authorize]
+        public ResponseModel HandleRequestDayOff(int userId)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
+
+                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId && d.Type == EnumUtil.SpecialDayType.DayOff);
+
+                SpecialDayRequestModel response = new SpecialDayRequestModel();
+                response.SpecialDays = new List<SpecialDayModel>();
+
+                if (listDays != null)
+                {
+                    foreach (var day in listDays)
+                    {
+                        var specialDays = _mapper.Map<SpecialDay, SpecialDayModel>(day);
+                        response.SpecialDays.Add(specialDays);
+                    }
+                }
+
+                if (response.SpecialDays.Any())
+                    return ResponseUtil.GetOKResult(response.SpecialDays);
+
+                return ResponseUtil.GetOKResult(null);
             }
             catch (Exception ex)
             {
@@ -59,6 +182,9 @@ namespace Backend.Controllers
         {
             try
             {
+                var dayoff = _specialDayRepository.FirstOrDefault(d => d.Id == specialDayId && d.DayOffStatus == EnumUtil.DayOffStatus.Waiting);
+                if (dayoff == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
                 return ResponseUtil.GetOKResult("Success");
             }
             catch (Exception ex)
