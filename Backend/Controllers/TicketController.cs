@@ -287,16 +287,23 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("create-report")]
         [Authorize]
-        public ResponseModel CreateReport([FromForm]ReportModel model, IList<IFormFile> files)
+        public ResponseModel CreateReport([FromForm]ReportModel model, IList<IFormFile> files, [FromHeader] string authorization)
         {
             try
             {
+                int userId = _jwtHandler.GetUserIdFromToken(authorization);
+                var user = _userRepository.FirstOrDefault(user=> user.Id == userId && !user.IsDeactivate);
+
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
                 var ticket = _ticketRepository.FirstOrDefault(t => t.Id == model.TicketId && !t.IsDeactivate);
 
                 if (ticket == null)
                     return ResponseUtil.GetBadRequestResult("ticket_not_found");
 
                 Report report = _mapper.Map<ReportModel, Report>(model);
+                report.UserId = userId;
 
                 if (_reportRepository.Insert(report) > 0 && files != null)
                 {
