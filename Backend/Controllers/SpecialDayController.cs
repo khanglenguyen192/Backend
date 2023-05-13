@@ -13,7 +13,6 @@ namespace Backend.Controllers
     public class SpecialDayController : BaseController
     {
         private readonly ISpecialDayRepository _specialDayRepository;
-        private readonly IUserRepository _userRepository;
 
         public SpecialDayController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
@@ -24,7 +23,6 @@ namespace Backend.Controllers
             : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _specialDayRepository = specialDayRepository;
-            _userRepository = userRepository;
         }
 
         [HttpPost]
