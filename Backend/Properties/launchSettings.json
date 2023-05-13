@@ -23,8 +23,6 @@
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
       "publishAllPorts": true,
-      "useSSL": true,
-      "sslPort": 8080,
       "applicationUrl": "https://localhost:80"
     }
   },

@@ -103,6 +103,54 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Produces("application/json")]
+        [Route("update-user-identity")]
+        [Authorize]
+        public ResponseModel UpdateUserIdentity(int userId, [FromForm] UpdateUserIdentityModel model, IFormFile idFrontImage, IFormFile idBackImage)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                user.Update(model);
+                bool updateResult = _userRepository.Update(user) > 0;
+
+                if (updateResult && (idFrontImage != null || idBackImage != null))
+                {
+                    if (idFrontImage != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(user.IdFrontImage))
+                        {
+                            FileUtils.DeleteFile(Constants.UserDataFolderName, user.IdFrontImage);
+                        }
+
+                        user.IdFrontImage = FileUtils.ImageUpload(Constants.UserDataFolderName, idFrontImage);
+                    }
+
+                    if (idBackImage != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(user.IdBackImage))
+                        {
+                            FileUtils.DeleteFile(Constants.UserDataFolderName, user.IdBackImage);
+                        }
+
+                        user.IdBackImage = FileUtils.ImageUpload(Constants.UserDataFolderName, idBackImage);
+                    }
+
+                    _userRepository.Update(user);
+                }
+
+                return ResponseUtil.GetOKResult(model);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
         [Route("reset-password")]
         public ResponseModel ResetPassword(int userId)
         {

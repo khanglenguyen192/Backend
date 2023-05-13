@@ -13,3 +13,4 @@ Backend.DBContext/obj
 Backend.Common/obj
 Backend.Services/obj
 Backend/UserData
+Backend.Entities/obj

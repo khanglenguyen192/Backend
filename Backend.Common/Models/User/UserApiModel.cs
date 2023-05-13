@@ -65,6 +65,16 @@ namespace Backend.Common
 
         public int NumberOfDenpendents { get; set; } = 0;
 
+        public long? UserIdentity { get; set; }
+
+        public DateTime? IdIssueDate { get; set; }
+
+        public string? IdIssuePlace { get; set; }
+
+        public string? IdFrontImage { get; set; }
+
+        public string? IdBackImage { get; set; }
+
     }
 
     public static class UserModelEmm
@@ -157,6 +167,15 @@ namespace Backend.Common
             user.SkypeId = model.SkypeId;
             user.LinkedId = model.LinkedId;
             user.FacebookId = model.FacebookId;
+
+            return user;
+        }
+
+        public static User Update(this User user, UpdateUserIdentityModel model)
+        {
+            user.IdIssuePlace = model.IdIssuePlace;
+            user.UserIdentity = model.UserIdentity.GetValueOrDefault(0);
+            user.IdIssueDate = CommonUtils.ConvertDateTime(model.IdIssueDate, Constants.DATETIME_FORMAT);
 
             return user;
         }
