@@ -14,6 +14,7 @@ namespace Backend.Common
         public const string USER_IS_DEACTIVATE = "user_is_deactivate"; //User is deactivate
         public const string SERVER_ERROR = "server_error"; //Server Error
         public const string BAD_REQUEST = "bad_request";
+        public const string UNAUTHORIZED = "unauthorized";
         public const string EMAIL_OR_PHONE_NUMBER_ALREADY_EXIST = "email_or_phone_number_already_exist"; //This email or phone number already exist.
         public const string EMAIL_OR_PHONE_NUMBER_INVALID = "email_or_phone_number_invalid"; //This email or phone number is invalid.
         public const string PASSWORD_INVALID = "password_invalid"; //This password is invalid.

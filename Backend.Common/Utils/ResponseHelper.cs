@@ -44,5 +44,10 @@ namespace Backend.Common
                 }
             };
         }
+
+        public static ResponseModel GetUnAuthoriedResult(string message = "")
+        {
+            return GetErrorResult(HttpStatusCode.Unauthorized, ErrorMessageCode.UNAUTHORIZED, message);
+        }
     }
 }

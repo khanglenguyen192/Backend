@@ -343,5 +343,79 @@ namespace Backend.Controllers
                 return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-access")]
+        [Authorize]
+        public ResponseModel GetAccess(int departmentId, [FromHeader] string authorization)
+        {
+            try
+            {
+                int userId = _jwtHandler.GetUserIdFromToken(authorization);
+
+                if (userId == 1)
+                {
+                    return ResponseUtil.GetOKResult(DepartmentRole.Administrator);
+                }
+
+                if (!_userRepository.Exists(u => u.Id == userId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var departmentUser = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == departmentId && d.UserId == userId && !d.IsDeactivate);
+
+                if (departmentUser != null)
+                {
+                    return ResponseUtil.GetOKResult(departmentUser.RoleId);
+                }
+
+                return ResponseUtil.GetUnAuthoriedResult("cannot_access");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("update-user")]
+        [Authorize]
+        public ResponseModel GetAccess(UpdateDepartmentUserModel model, [FromHeader] string authorization)
+        {
+            try
+            {
+                if (!_userRepository.Exists(u => u.Id == model.UserId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                if (!_departmentRepository.Exists(d => d.Id == model.DepartmentId))
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var departmentUser = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == model.DepartmentId && d.UserId == model.UserId && !d.IsDeactivate);
+
+                if (departmentUser != null)
+                {
+                    if (model.RoleId == DepartmentRole.Manager
+                        && _departmentUserMapRepository.Exists(d => d.RoleId == DepartmentRole.Manager && !d.IsDeactivate))
+                    {
+                        return ResponseUtil.GetBadRequestResult("manager_exist");
+                    }
+
+                    departmentUser.RoleId = model.RoleId;
+                    _departmentUserMapRepository.Update(departmentUser);
+                    return ResponseUtil.GetOKResult(departmentUser);
+                }
+
+                return ResponseUtil.GetBadRequestResult("user_not_in_department");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
     }
 }
