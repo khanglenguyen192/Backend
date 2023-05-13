@@ -183,8 +183,9 @@ namespace Backend.Controllers
             {
                 var dayoff = _specialDayRepository.FirstOrDefault(d => d.Id == specialDayId && d.DayOffStatus == EnumUtil.DayOffStatus.Waiting);
                 if (dayoff == null)
-                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
-                return ResponseUtil.GetOKResult("Success");
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.CAN_NOT_DAYOFF);
+                _specialDayRepository.Delete(dayoff);
+                return ResponseUtil.GetOKResult(dayoff);
             }
             catch (Exception ex)
             {
