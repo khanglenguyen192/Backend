@@ -71,9 +71,8 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("update-user")]
-        //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel UpdateUser(int userId, [FromBody] UpdateUserModel model, IFormFile image)
+        public ResponseModel UpdateUser(int userId, [FromForm] UpdateUserModel model, IFormFile image)
         {
             try
             {
@@ -81,14 +80,18 @@ namespace Backend.Controllers
                 if (user == null)
                     return ResponseUtil.GetBadRequestResult("user_not_found");
 
-                user = _mapper.Map<UpdateUserModel, User>(model);
+                user.Update(model);
 
-                if (image != null)
+                if (_userRepository.Update(user) > 0 && image != null)
                 {
-                    user.Avatar = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
-                }
+                    if (!string.IsNullOrWhiteSpace(user.Avatar))
+                    {
+                        FileUtils.DeleteFile(Constants.UserDataFolderName, user.Avatar);
+                    }
 
-                _userRepository.Update(user);
+                    user.Avatar = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
+                    _userRepository.Update(user);
+                }
 
                 return ResponseUtil.GetOKResult(model);
             }
@@ -101,7 +104,6 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("reset-password")]
-        [Authorize(Roles = "Administrator")]
         public ResponseModel ResetPassword(int userId)
         {
             try

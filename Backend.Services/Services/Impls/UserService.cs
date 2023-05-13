@@ -84,7 +84,7 @@ namespace Backend.Services
                     //Get Token
                     int expireToken = 60;
                     data.Token = _jwtHandler.Create(user.Id.ToString(), expireToken, user.Role);
-                    data.Avatar = CommonUtils.GetDisplayImageUrl(user.Avatar);
+                    data.Avatar = user.Avatar;
                     data.FullName = user.FullName;
                     data.Role = user.Role.ToString();
                     data.UserId = user.Id;

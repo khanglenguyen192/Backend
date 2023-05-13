@@ -400,7 +400,7 @@ namespace Backend.Controllers
                 if (departmentUser != null)
                 {
                     if (model.RoleId == DepartmentRole.Manager
-                        && _departmentUserMapRepository.Exists(d => d.RoleId == DepartmentRole.Manager && !d.IsDeactivate))
+                        && _departmentUserMapRepository.Exists(d => d.RoleId == DepartmentRole.Manager && d.DepartmentId == model.DepartmentId && !d.IsDeactivate))
                     {
                         return ResponseUtil.GetBadRequestResult("manager_exist");
                     }
