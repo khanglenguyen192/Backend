@@ -81,14 +81,7 @@ namespace Backend.Controllers
                             departmentUserMap.UserId = userModel.Id;
                             departmentUserMap.DepartmentId = department.Id;
                             Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
-                            if (role != null)
-                            {
-                                departmentUserMap.RoleId = role.Id;
-                            }
-                            else
-                            {
-                                departmentUserMap.RoleId = 3; //Default role Employee to department
-                            }
+                            departmentUserMap.RoleId = DepartmentRole.Employee;
 
                             _departmentUserMapRepository.Insert(departmentUserMap);
                         }
@@ -181,15 +174,7 @@ namespace Backend.Controllers
                             DepartmentUserMap departmentUserMap = new DepartmentUserMap();
                             departmentUserMap.UserId = userModel.Id;
                             departmentUserMap.DepartmentId = model.DepartmentId;
-                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
-                            if (role != null)
-                            {
-                                departmentUserMap.RoleId = role.Id;
-                            }
-                            else
-                            {                                                                                                            
-                                departmentUserMap.RoleId = 3; //Default role Employee to department
-                            }
+                            departmentUserMap.RoleId = DepartmentRole.Employee;
 
                             _departmentUserMapRepository.Insert(departmentUserMap);
                         }
@@ -228,8 +213,15 @@ namespace Backend.Controllers
                         if (user != null)
                         {
                             UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
-                            userInfoModel.DepartmentRole = departmentUser.RoleId;
-                            response.Add(userInfoModel);
+                            userInfoModel.DepartmentRole = (int)departmentUser.RoleId;
+                            if (departmentUser.RoleId == DepartmentRole.Manager)
+                            {
+                                response.Insert(0, userInfoModel);
+                            }
+                            else
+                            {
+                                response.Add(userInfoModel);
+                            }
                         }
                     }
                 }
@@ -238,6 +230,26 @@ namespace Backend.Controllers
                     return ResponseUtil.GetOKResult(response);
 
                 return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-department")]
+        [Authorize]
+        public ResponseModel GetDepartment(int departmentId)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                return ResponseUtil.GetOKResult(department);
             }
             catch (Exception ex)
             {

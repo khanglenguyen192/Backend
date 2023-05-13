@@ -18,6 +18,13 @@ namespace Backend.Entities
             Collaborators
         }
 
+        public enum DepartmentRole
+        {
+            Administrator = 1,
+            Manager,
+            Employee,
+        }
+
         public enum SpecialDayType
         {
             None = 0,

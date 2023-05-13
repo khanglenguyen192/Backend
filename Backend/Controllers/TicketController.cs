@@ -375,7 +375,15 @@ namespace Backend.Controllers
 
                 var reports = _reportRepository.GetAll(r => r.TicketId == ticketId);
 
-                return ResponseUtil.GetOKResult(reports);
+                var result = new List<ReportModel>();
+
+                foreach (var report in reports)
+                {
+                    var reportModel = _mapper.Map<Report, ReportModel>(report);
+                    result.Add(reportModel);
+                }
+
+                return ResponseUtil.GetOKResult(result);
             }
             catch (Exception ex)
             {
