@@ -15,7 +15,9 @@ namespace Backend.Controllers
             IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
-            IUserRepository userRepository) : base(userService, webHostEnvironment, logger, userRepository)
+            IJwtHandler jwtHandler,
+            IUserRepository userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
         }
 
@@ -24,11 +26,11 @@ namespace Backend.Controllers
         [Route("create-user")]
         //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel CreateUser([FromBody] UserApiModel model)
+        public ResponseModel CreateUser([FromBody] UserApiModel model, [FromHeader] string authorization)
         {
             try
             {
-                var result = _userService.CreateUser(model, Entities.EnumUtil.UserRole.Administrator);
+                var result = _userService.CreateUser(model, model.Role);
                 if (result != null)
                 {
                     return ResponseUtil.GetOKResult(result);
@@ -69,9 +71,8 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("update-user")]
-        //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel UpdateUser(int userId, [FromBody] UpdateUserModel model, IFormFile image)
+        public ResponseModel UpdateUser(int userId, [FromForm] UpdateUserModel model, IFormFile image)
         {
             try
             {
@@ -79,14 +80,66 @@ namespace Backend.Controllers
                 if (user == null)
                     return ResponseUtil.GetBadRequestResult("user_not_found");
 
-                user = _mapper.Map<UpdateUserModel, User>(model);
+                user.Update(model);
 
-                if (image != null)
+                if (_userRepository.Update(user) > 0 && image != null)
                 {
+                    if (!string.IsNullOrWhiteSpace(user.Avatar))
+                    {
+                        FileUtils.DeleteFile(Constants.UserDataFolderName, user.Avatar);
+                    }
+
                     user.Avatar = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
+                    _userRepository.Update(user);
                 }
 
-                _userRepository.Update(user);
+                return ResponseUtil.GetOKResult(model);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("update-user-identity")]
+        [Authorize]
+        public ResponseModel UpdateUserIdentity(int userId, [FromForm] UpdateUserIdentityModel model, IFormFile idFrontImage, IFormFile idBackImage)
+        {
+            try
+            {
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                user.Update(model);
+                bool updateResult = _userRepository.Update(user) > 0;
+
+                if (updateResult && (idFrontImage != null || idBackImage != null))
+                {
+                    if (idFrontImage != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(user.IdFrontImage))
+                        {
+                            FileUtils.DeleteFile(Constants.UserDataFolderName, user.IdFrontImage);
+                        }
+
+                        user.IdFrontImage = FileUtils.ImageUpload(Constants.UserDataFolderName, idFrontImage);
+                    }
+
+                    if (idBackImage != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(user.IdBackImage))
+                        {
+                            FileUtils.DeleteFile(Constants.UserDataFolderName, user.IdBackImage);
+                        }
+
+                        user.IdBackImage = FileUtils.ImageUpload(Constants.UserDataFolderName, idBackImage);
+                    }
+
+                    _userRepository.Update(user);
+                }
 
                 return ResponseUtil.GetOKResult(model);
             }
@@ -99,7 +152,6 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("reset-password")]
-        [Authorize(Roles = "Administrator")]
         public ResponseModel ResetPassword(int userId)
         {
             try

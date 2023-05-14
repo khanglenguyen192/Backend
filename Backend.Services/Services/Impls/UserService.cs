@@ -3,6 +3,7 @@ using Backend.Common.Models.User;
 using Backend.DBContext;
 using Backend.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -34,6 +35,12 @@ namespace Backend.Services
             user.IsDeactivate = false;
 
             _userRepository.Insert(user);
+
+            if(string.IsNullOrWhiteSpace(user.UserCode))
+            {
+                user.UserCode = user.Id.ToString();
+                _userRepository.Update(user);
+            }
 
             return ResponseUtil.GetOKResult(user);
         }
@@ -77,7 +84,7 @@ namespace Backend.Services
                     //Get Token
                     int expireToken = 60;
                     data.Token = _jwtHandler.Create(user.Id.ToString(), expireToken, user.Role);
-                    data.Avatar = CommonUtils.GetDisplayImageUrl(user.Avatar);
+                    data.Avatar = user.Avatar;
                     data.FullName = user.FullName;
                     data.Role = user.Role.ToString();
                     data.UserId = user.Id;

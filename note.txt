@@ -1,0 +1,2 @@
+docker build -t backend:1.0 .
+docker run --name backend -p 44334:80 backend:1.0

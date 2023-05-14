@@ -7,12 +7,10 @@ using static Backend.Entities.EnumUtil;
 
 namespace Backend.Common
 {
-    public interface IJwtHandler
+    public class UpdateDepartmentUserModel
     {
-        string Create(string id, int expireToken, UserRole role);
-
-        UserRole GetRoleFromToken(string token);
-
-        int GetUserIdFromToken(string token);
+        public int DepartmentId { get; set; }
+        public int UserId { get; set; }
+        public DepartmentRole RoleId { get; set; }
     }
 }

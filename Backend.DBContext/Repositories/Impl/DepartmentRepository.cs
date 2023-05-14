@@ -1,4 +1,5 @@
 ﻿using Backend.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,12 @@ namespace Backend.DBContext
     {
         public DepartmentRepository(IDbContextFactory contextFactory) : base(contextFactory)
         {
+            
+        }
+
+        public IList<Department> GetRootDepartments()
+        {
+            return GetAll(d => d.IsRoot);
         }
     }
 }

@@ -19,5 +19,6 @@ namespace Backend.Entities
         public int? OwnerId { get; set; }
         [ForeignKey("OwnerId")]
         public virtual User? Owner { get; set; }
+        public bool IsRoot { get; set; }
     }
 }

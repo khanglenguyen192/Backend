@@ -15,6 +15,7 @@ namespace Backend.Common
         public string? UserCode { get; set; }
 
         public string? Avatar { get; set; }
+        public string? Email { get; set; }
 
         public bool IsInterns { get; set; }
         public SpecialDayType SpecialDayType { get; set; }

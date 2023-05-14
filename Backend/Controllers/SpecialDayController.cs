@@ -1,4 +1,5 @@
 ﻿using Backend.Common;
+using Backend.Common.Models.Common;
 using Backend.DBContext;
 using Backend.Entities;
 using Backend.Services;
@@ -13,17 +14,16 @@ namespace Backend.Controllers
     public class SpecialDayController : BaseController
     {
         private readonly ISpecialDayRepository _specialDayRepository;
-        private readonly IUserRepository _userRepository;
 
         public SpecialDayController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
+            IJwtHandler jwtHandler,
             IUserRepository userRepository,
             ISpecialDayRepository specialDayRepository)
-            : base(userService, webHostEnvironment, logger, userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _specialDayRepository = specialDayRepository;
-            _userRepository = userRepository;
         }
 
         [HttpPost]
@@ -186,6 +186,24 @@ namespace Backend.Controllers
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.CAN_NOT_DAYOFF);
                 _specialDayRepository.Delete(dayoff);
                 return ResponseUtil.GetOKResult(dayoff);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("search")]
+        [Authorize]
+        public ResponseModel SearchSpecialDay(SearchSpecialDayModel searchModel)
+        {
+            try
+            {
+                var queryResult = _specialDayRepository.SearchSpecialDay(searchModel);
+
+                return ResponseUtil.GetOKResult(queryResult);
             }
             catch (Exception ex)
             {

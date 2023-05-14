@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Backend.Common
 {
-    public class PagingModel
+    public class RemoveDepartmentUserModel
     {
-        public int PageIndex { get; set; } = 0;
-        public int PageSize { get; set; } = Int32.MaxValue;
+        public int DepartmentId { get; set; }
+        public int UserId { get; set; }
     }
 }

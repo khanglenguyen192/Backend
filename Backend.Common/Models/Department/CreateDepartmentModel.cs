@@ -12,21 +12,11 @@ namespace Backend.Common
     public class CreateDepartmentModel
     {
         public int? ParentId { get; set; }
-        [Required]
-        [JsonProperty(PropertyName = "departmentName")]
+
         public string DepartmentName { get; set; }
-        [Required]
-        [JsonProperty(PropertyName = "status")]
+
         public DepartmentStatus Status { get; set; }
 
-        [JsonProperty(PropertyName = "description")]
         public string? Description { get; set; }
-
-        [JsonProperty(PropertyName = "departmentLogo")]
-        public string? DepartmentLogo { get; set; }
-
-        [JsonProperty(PropertyName = "users")]
-        public IList<UserMapDepartmentModel>? Users { get; set; }
-
     }
 }

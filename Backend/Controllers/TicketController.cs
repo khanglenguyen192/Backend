@@ -22,11 +22,12 @@ namespace Backend.Controllers
         public TicketController(IUserService userService,
                                 IWebHostEnvironment webHostEnvironment,
                                 ILogger<BaseController> logger,
+                                IJwtHandler jwtHandler,
                                 IUserRepository userRepository,
                                 ITicketRepository ticketRepository,
                                 IReportRepository reportRepository,
                                 ITicketFileRepository ticketFileRepository,
-                                IReportFileRepository reportFileRepository) : base(userService, webHostEnvironment, logger, userRepository)
+                                IReportFileRepository reportFileRepository) : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _ticketRepository = ticketRepository;
             _reportRepository = reportRepository;
@@ -286,16 +287,23 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("create-report")]
         [Authorize]
-        public ResponseModel CreateReport([FromForm]ReportModel model, IList<IFormFile> files)
+        public ResponseModel CreateReport([FromForm]ReportModel model, IList<IFormFile> files, [FromHeader] string authorization)
         {
             try
             {
+                int userId = _jwtHandler.GetUserIdFromToken(authorization);
+                var user = _userRepository.FirstOrDefault(user=> user.Id == userId && !user.IsDeactivate);
+
+                if (user == null)
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
                 var ticket = _ticketRepository.FirstOrDefault(t => t.Id == model.TicketId && !t.IsDeactivate);
 
                 if (ticket == null)
                     return ResponseUtil.GetBadRequestResult("ticket_not_found");
 
                 Report report = _mapper.Map<ReportModel, Report>(model);
+                report.UserId = userId;
 
                 if (_reportRepository.Insert(report) > 0 && files != null)
                 {
@@ -374,7 +382,15 @@ namespace Backend.Controllers
 
                 var reports = _reportRepository.GetAll(r => r.TicketId == ticketId);
 
-                return ResponseUtil.GetOKResult(reports);
+                var result = new List<ReportModel>();
+
+                foreach (var report in reports)
+                {
+                    var reportModel = _mapper.Map<Report, ReportModel>(report);
+                    result.Add(reportModel);
+                }
+
+                return ResponseUtil.GetOKResult(result);
             }
             catch (Exception ex)
             {

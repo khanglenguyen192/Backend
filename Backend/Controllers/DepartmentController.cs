@@ -5,6 +5,7 @@ using Backend.Entities;
 using Backend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using static Backend.Entities.EnumUtil;
 
 namespace Backend.Controllers
@@ -21,12 +22,13 @@ namespace Backend.Controllers
         public DepartmentController(IUserService userService,
                                     IWebHostEnvironment webHostEnvironment,
                                     ILogger<BaseController> logger,
+                                    IJwtHandler jwtHandler,
                                     IUserRepository userRepository,
                                     IDepartmentRepository departmentRepository,
                                     IDepartmentMapRepository departmentMapRepository,
                                     IDepartmentUserMapRepository departmentUserMapRepository,
                                     IRoleRepository roleRepository) 
-            : base(userService, webHostEnvironment, logger, userRepository)
+            : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _departmentRepository = departmentRepository;
             _departmentMapRepository = departmentMapRepository;
@@ -37,9 +39,8 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("create-department")]
-        //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel CreateDepartment([FromBody] CreateDepartmentModel model)
+        public ResponseModel CreateDepartment([FromForm] CreateDepartmentModel model, IFormFile image)
         {
             try
             {
@@ -55,6 +56,9 @@ namespace Backend.Controllers
                 }
 
                 department.OwnerId = 1; //Default: Assign to root user
+
+                department.IsRoot = parentDepartment == null;
+
                 _departmentRepository.Insert(department);
 
                 if (parentDepartment != null)
@@ -65,29 +69,10 @@ namespace Backend.Controllers
                     _departmentMapRepository.Insert(departmentMap);
                 }
 
-                if (model.Users != null)
+                if (image != null)
                 {
-                    foreach (var userModel in model.Users)
-                    {
-                        var user = _userRepository.FirstOrDefault(u => u.Id == userModel.Id && !u.IsDeactivate);
-                        if (user != null)
-                        {
-                            DepartmentUserMap departmentUserMap = new DepartmentUserMap();
-                            departmentUserMap.UserId = userModel.Id;
-                            departmentUserMap.DepartmentId = department.Id;
-                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
-                            if (role != null)
-                            {
-                                departmentUserMap.RoleId = role.Id;
-                            }
-                            else
-                            {
-                                departmentUserMap.RoleId = 3; //Default role Employee to department
-                            }
-
-                            _departmentUserMapRepository.Insert(departmentUserMap);
-                        }
-                    }
+                    department.DepartmentLogo = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
+                    _departmentRepository.Update(department);
                 }
 
                 return ResponseUtil.GetOKResult(department);
@@ -107,6 +92,22 @@ namespace Backend.Controllers
             try
             {
                 return ResponseUtil.GetOKResult(_departmentRepository.GetAll(d => d.OwnerId == userId && !d.IsDeactivate));
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-root-deparments")]
+        [Authorize]
+        public ResponseModel GetRootDepartments([FromHeader] string authorization)
+        {
+            try
+            {
+                return ResponseUtil.GetOKResult(_departmentRepository.GetRootDepartments());
             }
             catch (Exception ex)
             {
@@ -160,15 +161,7 @@ namespace Backend.Controllers
                             DepartmentUserMap departmentUserMap = new DepartmentUserMap();
                             departmentUserMap.UserId = userModel.Id;
                             departmentUserMap.DepartmentId = model.DepartmentId;
-                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
-                            if (role != null)
-                            {
-                                departmentUserMap.RoleId = role.Id;
-                            }
-                            else
-                            {                                                                                                            
-                                departmentUserMap.RoleId = 3; //Default role Employee to department
-                            }
+                            departmentUserMap.RoleId = DepartmentRole.Employee;
 
                             _departmentUserMapRepository.Insert(departmentUserMap);
                         }
@@ -207,8 +200,15 @@ namespace Backend.Controllers
                         if (user != null)
                         {
                             UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
-                            userInfoModel.DepartmentRole = departmentUser.RoleId;
-                            response.Add(userInfoModel);
+                            userInfoModel.DepartmentRole = (int)departmentUser.RoleId;
+                            if (departmentUser.RoleId == DepartmentRole.Manager)
+                            {
+                                response.Insert(0, userInfoModel);
+                            }
+                            else
+                            {
+                                response.Add(userInfoModel);
+                            }
                         }
                     }
                 }
@@ -217,6 +217,26 @@ namespace Backend.Controllers
                     return ResponseUtil.GetOKResult(response);
 
                 return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-department")]
+        [Authorize]
+        public ResponseModel GetDepartment(int departmentId)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                return ResponseUtil.GetOKResult(department);
             }
             catch (Exception ex)
             {
@@ -268,6 +288,146 @@ namespace Backend.Controllers
                 }
 
                 return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-users-to-add")]
+        [Authorize]
+        public ResponseModel GetUsersToAdd(int departmentId, [FromHeader] string authorization)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var usersToAdd = _userRepository.GetUserToAddDepartment(departmentId);
+
+                List<UserInfoModel> response = new List<UserInfoModel>();
+
+                if (usersToAdd != null)
+                {
+                    foreach (var user in usersToAdd)
+                    {
+                        if (user != null)
+                        {
+                            UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
+                            response.Add(userInfoModel);
+                        }
+                    }
+                }
+
+                return ResponseUtil.GetOKResult(response);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-access")]
+        [Authorize]
+        public ResponseModel GetAccess(int departmentId, [FromHeader] string authorization)
+        {
+            try
+            {
+                int userId = _jwtHandler.GetUserIdFromToken(authorization);
+
+                if (userId == 1)
+                {
+                    return ResponseUtil.GetOKResult(DepartmentRole.Administrator);
+                }
+
+                if (!_userRepository.Exists(u => u.Id == userId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var departmentUser = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == departmentId && d.UserId == userId && !d.IsDeactivate);
+
+                if (departmentUser != null)
+                {
+                    return ResponseUtil.GetOKResult(departmentUser.RoleId);
+                }
+
+                return ResponseUtil.GetUnAuthoriedResult("cannot_access");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("update-user")]
+        [Authorize]
+        public ResponseModel UpdateUser(UpdateDepartmentUserModel model, [FromHeader] string authorization)
+        {
+            try
+            {
+                if (!_userRepository.Exists(u => u.Id == model.UserId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                if (!_departmentRepository.Exists(d => d.Id == model.DepartmentId))
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var departmentUser = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == model.DepartmentId && d.UserId == model.UserId && !d.IsDeactivate);
+
+                if (departmentUser != null)
+                {
+                    if (model.RoleId == DepartmentRole.Manager
+                        && _departmentUserMapRepository.Exists(d => d.RoleId == DepartmentRole.Manager && d.DepartmentId == model.DepartmentId && !d.IsDeactivate))
+                    {
+                        return ResponseUtil.GetBadRequestResult("manager_exist");
+                    }
+
+                    departmentUser.RoleId = model.RoleId;
+                    _departmentUserMapRepository.Update(departmentUser);
+                    return ResponseUtil.GetOKResult(departmentUser);
+                }
+
+                return ResponseUtil.GetBadRequestResult("user_not_in_department");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("remove-user")]
+        [Authorize]
+        public ResponseModel RemoveUser(RemoveDepartmentUserModel model, [FromHeader] string authorization)
+        {
+            try
+            {
+                if (!_userRepository.Exists(u => u.Id == model.UserId && !u.IsDeactivate))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                if (!_departmentRepository.Exists(d => d.Id == model.DepartmentId))
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var departmentUser = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == model.DepartmentId && d.UserId == model.UserId && !d.IsDeactivate);
+
+                if (departmentUser != null)
+                {
+                    _departmentUserMapRepository.Delete(departmentUser);
+                    return ResponseUtil.GetOKResult(departmentUser);
+                }
+
+                return ResponseUtil.GetBadRequestResult("user_not_in_department");
             }
             catch (Exception ex)
             {
