@@ -39,9 +39,8 @@ namespace Backend.Controllers
         [HttpPost]
         [Produces("application/json")]
         [Route("create-department")]
-        //[Authorize(Roles = "Administrator")]
         [Authorize]
-        public ResponseModel CreateDepartment([FromBody] CreateDepartmentModel model)
+        public ResponseModel CreateDepartment([FromForm] CreateDepartmentModel model, IFormFile image)
         {
             try
             {
@@ -70,22 +69,10 @@ namespace Backend.Controllers
                     _departmentMapRepository.Insert(departmentMap);
                 }
 
-                if (model.Users != null)
+                if (image != null)
                 {
-                    foreach (var userModel in model.Users)
-                    {
-                        var user = _userRepository.FirstOrDefault(u => u.Id == userModel.Id && !u.IsDeactivate);
-                        if (user != null)
-                        {
-                            DepartmentUserMap departmentUserMap = new DepartmentUserMap();
-                            departmentUserMap.UserId = userModel.Id;
-                            departmentUserMap.DepartmentId = department.Id;
-                            Role role = _roleRepository.FirstOrDefault(r => r.Id == userModel.RoleId && !r.IsDeactivate);
-                            departmentUserMap.RoleId = DepartmentRole.Employee;
-
-                            _departmentUserMapRepository.Insert(departmentUserMap);
-                        }
-                    }
+                    department.DepartmentLogo = FileUtils.ImageUpload(Constants.UserDataFolderName, image);
+                    _departmentRepository.Update(department);
                 }
 
                 return ResponseUtil.GetOKResult(department);

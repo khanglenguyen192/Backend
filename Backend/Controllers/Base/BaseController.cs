@@ -46,6 +46,7 @@ namespace Backend.Controllers
             cfg.CreateMap<SpecialDayModel, SpecialDay>();
             cfg.CreateMap<DayOffModel, SpecialDay>();
             cfg.CreateMap<SpecialDay, DayOffModel>();
+            cfg.CreateMap<SpecialDay, SpecialDayResponseModel>();
         });
 
         protected Mapper _mapper;

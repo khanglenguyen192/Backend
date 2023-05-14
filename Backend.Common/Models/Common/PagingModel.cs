@@ -9,6 +9,6 @@ namespace Backend.Common
     public class PagingModel
     {
         public int PageIndex { get; set; } = 0;
-        public int PageSize { get; set; } = 50;
+        public int PageSize { get; set; } = Int32.MaxValue;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Backend.Common;
+using Backend.Common.Models.Common;
 using Backend.DBContext;
 using Backend.Entities;
 using Backend.Services;
@@ -184,6 +185,24 @@ namespace Backend.Controllers
                 if (dayoff == null)
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
                 return ResponseUtil.GetOKResult("Success");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("search")]
+        [Authorize]
+        public ResponseModel SearchSpecialDay(SearchSpecialDayModel searchModel)
+        {
+            try
+            {
+                var queryResult = _specialDayRepository.SearchSpecialDay(searchModel);
+
+                return ResponseUtil.GetOKResult(queryResult);
             }
             catch (Exception ex)
             {
