@@ -125,6 +125,16 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+// Run database migrations
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var dbContext = (BackendSystemContext)services.GetRequiredService(typeof(BackendSystemContext));
+
+    // Apply any pending migrations
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
