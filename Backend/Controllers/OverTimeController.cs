@@ -61,5 +61,46 @@ namespace Backend.Controllers
                 return ResponseUtil.GetServerErrorResult(ex.Message);
             }
         }
+
+        [HttpDelete]
+        [Produces("application/json")]
+        [Route("delete")]
+        [Authorize]
+        public ResponseModel DeleteOverTime(int overTimeId)
+        {
+            try
+            {
+                if (_overTimeRepository.Exists(o => o.Id == overTimeId))
+                {
+                    _overTimeRepository.Delete(overTimeId);
+                    return ResponseUtil.GetOKResult("success");
+                }
+
+                return ResponseUtil.GetBadRequestResult("overtime_not_found");
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
+        [Route("get-by-user")]
+        [Authorize]
+        public ResponseModel GetOverTime(int userId)
+        {
+            try
+            {
+                if (!_userRepository.Exists(u => u.Id == userId))
+                    return ResponseUtil.GetBadRequestResult("user_not_found");
+
+                return ResponseUtil.GetOKResult(_overTimeRepository.GetAll(o => o.UserId == userId));
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.Message);
+            }
+        }
     }
 }
