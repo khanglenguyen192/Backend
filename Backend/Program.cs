@@ -102,6 +102,7 @@ builder.Services.AddTransient<ISpecialDayRepository, SpecialDayRepository>();
 builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IReportFileRepository, ReportFileRepository>();
 builder.Services.AddTransient<ITicketFileRepository, TicketFileRepository>();
+builder.Services.AddTransient<IOverTimeRepository, OverTimeRepository>();
 #endregion
 
 var securityConfig = builder.Configuration.GetSection("SecurityConfig").Get<SecurityConfig>();

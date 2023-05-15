@@ -162,7 +162,7 @@ namespace Backend.Common
             user.FullName= model.FullName;
             user.Phone = model.Phone;
             user.Gender = model.Gender;
-            user.Birthday = CommonUtils.ConvertDateTime(model.Birthday, Constants.DATETIME_FORMAT);
+            user.Birthday = Convert.ToDateTime(model.Birthday);
             user.BankAccount = model.BankAccount;
             user.SkypeId = model.SkypeId;
             user.LinkedId = model.LinkedId;
