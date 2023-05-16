@@ -40,7 +40,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("create-department")]
         [Authorize]
-        public ResponseModel CreateDepartment([FromForm] CreateDepartmentModel model, IFormFile image)
+        public ResponseModel CreateDepartment([FromForm] CreateDepartmentModel model, IFormFile? image)
         {
             try
             {

@@ -13,9 +13,5 @@ namespace Backend.Common
         public DateTime? IdIssueDate { get; set; }
 
         public string? IdIssuePlace { get; set; }
-
-        public string? IdFrontImage { get; set; }
-
-        public string? IdBackImage { get; set; }
     }
 }
