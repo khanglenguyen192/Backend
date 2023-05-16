@@ -63,7 +63,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("get-dayoff-emp")]
         [Authorize]
-        public ResponseModel GetDayOffEmp(int userId)
+        public ResponseModel GetDayOffEmp(int userId, int type)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Backend.Controllers
                 if (user == null)
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
 
-                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId && d.Type == EnumUtil.SpecialDayType.DayOff)
+                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId && d.Type == (EnumUtil.SpecialDayType)type)
                                     .OrderByDescending(x => x.Created);
 
                 DayOffResponseModel response = new DayOffResponseModel();
@@ -140,7 +140,7 @@ namespace Backend.Controllers
         [Produces("application/json")]
         [Route("handle-request-dayoff")]
         [Authorize]
-        public ResponseModel HandleRequestDayOff(int userId)
+        public ResponseModel HandleRequestDayOff(int userId, int specialDayId, int status)
         {
             try
             {
@@ -148,22 +148,17 @@ namespace Backend.Controllers
                 if (user == null)
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
 
-                var listDays = _specialDayRepository.GetAll(d => d.UserId == userId && d.Type == EnumUtil.SpecialDayType.DayOff);
+                SpecialDay request = _specialDayRepository.FirstOrDefault(d => d.UserId == userId && d.Id == specialDayId);
+                var res = 0;
 
-                SpecialDayRequestModel response = new SpecialDayRequestModel();
-                response.SpecialDays = new List<SpecialDayModel>();
-
-                if (listDays != null)
+                if (request != null)
                 {
-                    foreach (var day in listDays)
-                    {
-                        var specialDays = _mapper.Map<SpecialDay, SpecialDayModel>(day);
-                        response.SpecialDays.Add(specialDays);
-                    }
+                    request.DayOffStatus = (EnumUtil.DayOffStatus)status;
+                    res = _specialDayRepository.Update(request);
                 }
 
-                if (response.SpecialDays.Any())
-                    return ResponseUtil.GetOKResult(response.SpecialDays);
+                if (res != 0)
+                    return ResponseUtil.GetOKResult(request);
 
                 return ResponseUtil.GetOKResult(null);
             }
