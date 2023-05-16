@@ -16,13 +16,30 @@ namespace Backend.DBContext
 
         }
 
-        public IList<User> GetUserToAddDepartment(int departmentId)
+        public IList<User> GetUserNotInDepartment()
         {
-            string sql = string.Format("SELECT * FROM `User` AS u WHERE u.Id != 1 AND u.Id NOT IN (SELECT DISTINCT du.UserId FROM DepartmentUserMap AS du WHERE du.DepartmentId = {0})", departmentId);
 
             using (var context = ContextFactory.CreateDbContext())
             {
-                return context.User.FromSqlRaw(sql).ToList();
+                //string sql = string.Format("SELECT * FROM `User` AS u WHERE u.Id != 1 AND u.Id NOT IN (SELECT DISTINCT du.UserId FROM DepartmentUserMap AS du WHERE du.DepartmentId = {0})", departmentId);
+
+                //return context.User.FromSqlRaw(sql).ToList();
+
+                var query = from user in context.Set<User>()
+                            join d_user in context.Set<DepartmentUserMap>() on user.Id equals d_user.UserId 
+                            into map 
+                            from r in map.DefaultIfEmpty()
+                            select new
+                            {
+                                User = user,
+                                DepartmentUserMap = r
+                            };
+
+                var result =  query.Where(u => u.DepartmentUserMap == null 
+                                            && u.User.Role != EnumUtil.UserRole.Administrator)
+                    .Select(u => u.User).ToList();
+
+                return result;
             }
         }
     }

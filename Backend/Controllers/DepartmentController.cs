@@ -307,7 +307,7 @@ namespace Backend.Controllers
                 if (department == null)
                     return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
 
-                var usersToAdd = _userRepository.GetUserToAddDepartment(departmentId);
+                var usersToAdd = _userRepository.GetUserNotInDepartment();
 
                 List<UserInfoModel> response = new List<UserInfoModel>();
 
