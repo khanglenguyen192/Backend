@@ -138,22 +138,18 @@ namespace Backend.Controllers
 
         [HttpPut]
         [Produces("application/json")]
-        [Route("handle-request-dayoff")]
+        [Route("handle-request")]
         [Authorize]
-        public ResponseModel HandleRequestDayOff(int userId, int specialDayId, int status)
+        public ResponseModel HandleRequest(HandleRequestModel requestModel)
         {
             try
             {
-                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
-                if (user == null)
-                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
-
-                SpecialDay request = _specialDayRepository.FirstOrDefault(d => d.UserId == userId && d.Id == specialDayId);
+                SpecialDay request = _specialDayRepository.FirstOrDefault(d => d.Id == requestModel.ID);
                 var res = 0;
 
                 if (request != null)
                 {
-                    request.DayOffStatus = (EnumUtil.DayOffStatus)status;
+                    request.DayOffStatus = (EnumUtil.DayOffStatus)requestModel.DayOffStatus;
                     res = _specialDayRepository.Update(request);
                 }
 
