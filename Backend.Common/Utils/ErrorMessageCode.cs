@@ -102,5 +102,6 @@ namespace Backend.Common
         public const string CAN_NOT_EDIT_OLD_REPORT = "can_not_edit_old_report"; //can not edit old report
         public const string USER_NOT_IN_PROJECT = "user_not_in_project"; //user not in project
         public const string REPORT_NOT_FOUND = "report_not_found"; //report not found.
+        public const string CAN_NOT_DAYOFF = "can_not_dayoff"; // can_not_dayoff
     }
 }
