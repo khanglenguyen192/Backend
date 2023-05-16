@@ -1,4 +1,6 @@
-﻿using Backend.Entities;
+﻿using Backend.Common;
+using Backend.Common.Models.Common;
+using Backend.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +11,6 @@ namespace Backend.DBContext
 {
     public interface IOverTimeRepository : IBaseRepository<OverTime>
     {
+        PagingResponseModel<OverTimeResponeModel> SearchOverTime(SearchOverTimeModel searchModel);
     }
 }
