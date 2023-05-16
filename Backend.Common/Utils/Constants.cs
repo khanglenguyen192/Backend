@@ -13,7 +13,7 @@ namespace Backend.Common
         public const string TTME_FORMAT = "HH:mm:ss";
         public const string SQL_DATE_FORMAT = "yyyy-MM-dd";
 
-        public const string DEFAULT_PASSCODE = "123456x@X";
+        public const string DEFAULT_PASSCODE = "123456";
 
         public const string ROLE = "role";
         public const string USERID = "userId";

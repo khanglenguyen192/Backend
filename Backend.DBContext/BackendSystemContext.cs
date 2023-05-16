@@ -57,7 +57,7 @@ namespace Backend.DBContext
 
             #region root user
             var salt = new Guid().ToString();
-            modelBuilder.Entity<User>().HasData(new User { Id = 1, UserCode = "1", UserName = "root@gmail.com", Email = "root@gmail.com", FullName = "Lê Nguyên Khang", Birthday = DateTime.UtcNow, Salt = salt, PassCode = CommonUtils.GeneratePasscode("123456x@X", salt), Gender = Gender.Other, Role = UserRole.Administrator, Phone = "0349560351", IsDeactivate = false, IsFirstLogin = false, IsHardCode = true, SlackId = "BK2N33T8B/9lHXv9Ml0hKdjqgR0jPYcuqs" });
+            modelBuilder.Entity<User>().HasData(new User { Id = 1, UserCode = "1", UserName = "root@gmail.com", Email = "root@gmail.com", FullName = "Lê Nguyên Khang", Birthday = DateTime.UtcNow, Salt = salt, PassCode = CommonUtils.GeneratePasscode("123456", salt), Gender = Gender.Other, Role = UserRole.Administrator, Phone = "0349560351", IsDeactivate = false, IsFirstLogin = false, IsHardCode = true, SlackId = "BK2N33T8B/9lHXv9Ml0hKdjqgR0jPYcuqs" });
             #endregion
 
             #region HardCode
