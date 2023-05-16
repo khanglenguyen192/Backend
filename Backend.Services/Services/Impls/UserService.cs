@@ -52,7 +52,7 @@ namespace Backend.Services
 
         public ResponseModel LoginUser(LoginModel loginModel)
         {
-            User user = _userRepository.FirstOrDefault(u => u.Email.Equals(loginModel.UserName));
+            User user = _userRepository.FirstOrDefault(u => u.UserName.Equals(loginModel.UserName));
 
             if (user == null)
             {

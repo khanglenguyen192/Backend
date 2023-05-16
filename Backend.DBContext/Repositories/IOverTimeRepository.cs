@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace Backend.DBContext
 {
-    public interface IUserRepository : IBaseRepository<User>
+    public interface IOverTimeRepository : IBaseRepository<OverTime>
     {
-        IList<User> GetUserNotInDepartment();
     }
 }

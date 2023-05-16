@@ -27,6 +27,7 @@ namespace Backend.DBContext
                                 Created = s.Created,
                                 DateTime = s.DateTime,
                                 Option = s.Option,
+                                Reason = s.Reason,
                                 IsUrgent = s.IsUrgent,
                                 DayOffStatus = s.DayOffStatus,
                                 Type = s.Type,
