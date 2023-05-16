@@ -102,5 +102,23 @@ namespace Backend.Controllers
                 return ResponseUtil.GetServerErrorResult(ex.Message);
             }
         }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("search")]
+        [Authorize]
+        public ResponseModel SearchOverTime(SearchOverTimeModel searchModel)
+        {
+            try
+            {
+                var result = _overTimeRepository.SearchOverTime(searchModel);
+
+                return ResponseUtil.GetOKResult(result);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.Message);
+            }
+        }
     }
 }
