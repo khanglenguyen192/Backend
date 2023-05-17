@@ -44,6 +44,6 @@ jobs:
           script: cd git/docker/Backend;
             export IMAGE_TAG=${{ env.IMAGE_VERSION }};
             docker rm -f backend;
-            docker-compose up -d;
+            docker compose up -d;
             docker system prune -a -f;
             docker images;
