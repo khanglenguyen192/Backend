@@ -133,7 +133,7 @@ using (var scope = app.Services.CreateScope())
     var dbContext = services.GetRequiredService<BackendSystemContext>();
 
     // Apply any pending migrations
-    dbContext.Database.Migrate();
+    //dbContext.Database.Migrate();
 }
 
 // Configure the HTTP request pipeline.
