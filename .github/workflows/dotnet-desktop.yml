@@ -1,7 +1,7 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: .NET 6 CI/CD
 
 on:
   push:
@@ -41,8 +41,9 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
-          script: docker pull khanglenguyen192/backend:${{ env.IMAGE_VERSION }};
+          script: cd git/docker/Backend;
+            export IMAGE_TAG=${{ env.IMAGE_VERSION }};
             docker rm -f backend;
-            docker run --name backend -p 44334:80 khanglenguyen192/backend:${{ env.IMAGE_VERSION }};
+            docker-compose up -d;
             docker system prune -a -f;
             docker images;
