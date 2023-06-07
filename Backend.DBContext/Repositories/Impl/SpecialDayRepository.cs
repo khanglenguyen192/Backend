@@ -40,8 +40,19 @@ namespace Backend.DBContext
                 if (searchModel.DepartmentId != null)
                 {
                     var departmentUserQuery = from b in context.Set<DepartmentUserMap>() select b;
-                    IList<int> userIds = departmentUserQuery.Where(d => d.DepartmentId == searchModel.DepartmentId && !d.IsDeactivate)
+                    IList<int> userIds = new List<int>();
+
+                    if (searchModel.IgnoreDepartmentManager.GetValueOrDefault())
+                    {
+                        userIds = departmentUserQuery.Where(d => d.DepartmentId == searchModel.DepartmentId 
+                        && !d.IsDeactivate && d.RoleId != EnumUtil.DepartmentRole.Manager)
                         .Select(u => u.UserId).ToList();
+                    }
+                    else
+                    {
+                        userIds = departmentUserQuery.Where(d => d.DepartmentId == searchModel.DepartmentId && !d.IsDeactivate)
+                        .Select(u => u.UserId).ToList();
+                    }
 
                     if (userIds.Any())
                     {

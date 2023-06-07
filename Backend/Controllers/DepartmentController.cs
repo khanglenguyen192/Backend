@@ -226,6 +226,62 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Produces("application/json")]
+        [Route("get-department-managers")]
+        [Authorize]
+        public ResponseModel GetDepartmentManagers(int departmentId)
+        {
+            try
+            {
+                var department = _departmentRepository.FirstOrDefault(d => d.Id == departmentId);
+                if (department == null)
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.DEPARTMENT_NOT_FOUND);
+
+                var childDepartments = _departmentMapRepository.GetAll(d => d.ParentDepartmentId == departmentId);
+
+                if (childDepartments == null)
+                    return ResponseUtil.GetOKResult(null);
+
+                IList<DepartmentUserMap> departmentManagers = new List<DepartmentUserMap>();
+
+                foreach (var child in childDepartments)
+                {
+                    var childManager = _departmentUserMapRepository.FirstOrDefault(d => d.DepartmentId == child.DepartmentId 
+                    && d.RoleId == DepartmentRole.Manager);
+
+                    if (childManager != null)
+                        departmentManagers.Add(childManager);
+                }
+
+                List<UserInfoModel> response = new List<UserInfoModel>();
+
+                if (departmentManagers != null)
+                {
+                    foreach (var departmentManager in departmentManagers)
+                    {
+                        var user = _userRepository.FirstOrDefault(p => p.Id == departmentManager.UserId && !p.IsDeactivate);
+                        if (user != null)
+                        {
+                            UserInfoModel userInfoModel = _mapper.Map<User, UserInfoModel>(user);
+                            userInfoModel.DepartmentRole = (int)departmentManager.RoleId;
+                            userInfoModel.DepartmentName = _departmentRepository.GetById(departmentManager.DepartmentId)?.DepartmentName;
+                            response.Add(userInfoModel);
+                        }
+                    }
+                }
+
+                if (response.Any())
+                    return ResponseUtil.GetOKResult(response);
+
+                return ResponseUtil.GetOKResult(null);
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
+
+        [HttpGet]
+        [Produces("application/json")]
         [Route("get-department")]
         [Authorize]
         public ResponseModel GetDepartment(int departmentId)

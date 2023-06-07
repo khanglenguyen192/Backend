@@ -17,5 +17,6 @@ namespace Backend.Common
         public HolidayType? HolidayType { get; set; }
         public int? UserId { get; set; }
         public int? DepartmentId { get; set; }
+        public bool? IgnoreDepartmentManager { get; set; }
     }
 }
