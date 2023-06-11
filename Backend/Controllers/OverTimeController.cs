@@ -12,16 +12,19 @@ namespace Backend.Controllers
     public class OverTimeController : BaseController
     {
         private readonly IOverTimeRepository _overTimeRepository;
+        private readonly ISalaryRepository _salaryRepository;
 
         public OverTimeController(IUserService userService,
             IWebHostEnvironment webHostEnvironment,
             ILogger<BaseController> logger,
             IJwtHandler jwtHandler,
             IUserRepository userRepository,
-            IOverTimeRepository overTimeRepository) 
+            IOverTimeRepository overTimeRepository,
+            ISalaryRepository salaryRepository) 
             : base(userService, webHostEnvironment, logger, jwtHandler, userRepository)
         {
             _overTimeRepository = overTimeRepository;
+            _salaryRepository = salaryRepository;
         }
 
         [HttpPost]
@@ -54,6 +57,8 @@ namespace Backend.Controllers
 
                 _overTimeRepository.Insert(overTime);
 
+                UpdateUserSalary(overTime);
+
                 return ResponseUtil.GetOKResult(overTime);
             }
             catch (Exception ex)
@@ -70,9 +75,12 @@ namespace Backend.Controllers
         {
             try
             {
-                if (_overTimeRepository.Exists(o => o.Id == overTimeId))
+                var overTime = _overTimeRepository.FirstOrDefault(o => o.Id == overTimeId);
+
+                if (overTime != null)
                 {
                     _overTimeRepository.Delete(overTimeId);
+                    UpdateUserSalary(overTime);
                     return ResponseUtil.GetOKResult("success");
                 }
 
@@ -118,6 +126,46 @@ namespace Backend.Controllers
             catch (Exception ex)
             {
                 return ResponseUtil.GetServerErrorResult(ex.Message);
+            }
+        }
+
+        private void UpdateUserSalary(OverTime overTime)
+        {
+            var user = _userRepository.FirstOrDefault(u => u.Id == overTime.UserId && !u.IsDeactivate);
+
+            if (user == null)
+                return;
+
+            var currentMonth = overTime.Month.Month;
+
+            var currentYear = overTime.Month.Year;
+
+            var salary = _salaryRepository.FirstOrDefault(u => u.Id == overTime.UserId && currentMonth.Equals(u.Month.Month)
+                && currentYear.Equals(u.Month.Year));
+
+            if (salary == null)
+            {
+                salary = _salaryRepository.Insert(user);
+
+                if (salary == null)
+                    return;
+            }
+
+            var overTimes = _overTimeRepository.GetAll(o => o.UserId == user.Id && currentMonth.Equals(o.Month.Month)
+                    && currentYear.Equals(o.Month.Year));
+
+            if (overTimes.Any())
+            {
+                long total = 0;
+
+                foreach (var ot in overTimes)
+                {
+                    total += (long)(ot.WorkTime * user.HourSalary);
+                }
+
+                salary.OTSalary = total;
+
+                _salaryRepository.Update(salary);
             }
         }
     }

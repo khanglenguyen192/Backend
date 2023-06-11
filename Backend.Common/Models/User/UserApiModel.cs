@@ -75,6 +75,9 @@ namespace Backend.Common
 
         public string? IdBackImage { get; set; }
 
+        public double TotalDayOffRemainInYear { get; set; }
+
+        public double TotalDayOffInYear { get; set; }
     }
 
     public static class UserModelEmm

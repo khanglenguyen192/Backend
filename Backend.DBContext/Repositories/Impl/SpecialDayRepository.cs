@@ -54,10 +54,7 @@ namespace Backend.DBContext
                         .Select(u => u.UserId).ToList();
                     }
 
-                    if (userIds.Any())
-                    {
-                        query = query.Where(p => userIds.Contains(p.UserId.GetValueOrDefault()));
-                    }
+                    query = query.Where(p => userIds.Contains(p.UserId.GetValueOrDefault()));
                 }
 
                 if (searchModel.DateTime != null)

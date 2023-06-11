@@ -33,6 +33,7 @@ namespace Backend.Services
             user.PassCode = CommonUtils.GeneratePasscode(Constants.DEFAULT_PASSCODE, user.Salt);
             user.IsFirstLogin = true;
             user.IsDeactivate = false;
+            user.TotalDayOffRemainInYear = 1;
 
             _userRepository.Insert(user);
 

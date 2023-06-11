@@ -10,7 +10,7 @@ namespace Backend.Common
     public class SalaryModel
     {
         public int Id { get; set; }
-        public int Month { get; set; }
+        public DateTime Month { get; set; }
         public long BasicSalary { get; set; }
         public long LunchMoney { get; set; }
         public long TelephoneFee { get; set; }

@@ -103,6 +103,7 @@ builder.Services.AddTransient<IReportRepository, ReportRepository>();
 builder.Services.AddTransient<IReportFileRepository, ReportFileRepository>();
 builder.Services.AddTransient<ITicketFileRepository, TicketFileRepository>();
 builder.Services.AddTransient<IOverTimeRepository, OverTimeRepository>();
+builder.Services.AddTransient<ISalaryRepository, SalaryRepository>();
 #endregion
 
 var securityConfig = builder.Configuration.GetSection("SecurityConfig").Get<SecurityConfig>();

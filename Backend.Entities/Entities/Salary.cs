@@ -9,7 +9,7 @@ namespace Backend.Entities
 {
     public class Salary : BaseEntity
     {
-        public DateTime? Month { get; set; }
+        public DateTime Month { get; set; }
         public long BasicSalary { get; set; }
         public long LunchMoney { get; set; }
         public long TelephoneFee { get; set; }
@@ -50,5 +50,38 @@ namespace Backend.Entities
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public User User { get; set; }
+
+        public Salary()
+        {
+
+        }
+
+        public Salary(User user)
+        {
+            Month = DateTime.Now;
+            UserId = user.Id;
+            BasicSalary = user.BasicSalary;
+            LunchMoney = user.LunchMoney;
+            TelephoneFee = user.TelephoneFee;
+            PetrolMoney = user.PetrolMoney;
+            HousingSupport = user.HousingSupport;
+            ReduceYourself = user.ReduceYourself;
+            SalaryCalculatedForBHXHnBHYT = user.SalaryCalculatedForBHXHnBHYT;
+            SalaryCalculatedForBHTN = user.SalaryCalculatedForBHTN;
+        }
+
+        public long GetRealSalary()
+        {
+            long realSalary = 0;
+            realSalary += BasicSalary;
+            realSalary += LunchMoney;
+            realSalary += TelephoneFee;
+            realSalary += PetrolMoney;
+            realSalary += HousingSupport;
+            realSalary += SalaryPerformance;
+            realSalary += OTSalary;
+
+            return realSalary;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Backend.Entities
         public double WorkTime { get; set; }
         public double WorkTimeWithRate { get; set; }
         public string? Description { get; set; }
-        public DateTime? Month { get; set; }
+        public DateTime Month { get; set; }
         public int UserId { get; set; }
         public OvertimeRateType OvertimeRateType { get; set; }
 
