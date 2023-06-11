@@ -176,5 +176,43 @@ namespace Backend.Controllers
                 return ResponseUtil.GetServerErrorResult(ex.ToString());
             }
         }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [Route("change-password")]
+        public ResponseModel ChangePassword([FromBody]UpdatePasswordModel model, [FromHeader] string authorization)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(model.CurrentPassword) || string.IsNullOrWhiteSpace(model.NewPassword))
+                    return ResponseUtil.GetBadRequestResult("invalid_password");
+
+                int userId = _jwtHandler.GetUserIdFromToken(authorization);
+
+                var user = _userRepository.FirstOrDefault(u => u.Id == userId && !u.IsDeactivate);
+
+                if (user == null)
+                {
+                    return ResponseUtil.GetBadRequestResult(ErrorMessageCode.USER_NOT_FOUND);
+                }
+                else
+                {
+                    var passcode = CommonUtils.GeneratePasscode(model.CurrentPassword, user.Salt);
+                    if (passcode.Equals(user.PassCode))
+                    {
+                        user.Salt = Guid.NewGuid().ToString().Replace("-", "");
+                        user.PassCode = CommonUtils.GeneratePasscode(model.NewPassword, user.Salt);
+                        _userRepository.Update(user);
+                        return ResponseUtil.GetOKResult("Success");
+                    }
+                    
+                    return ResponseUtil.GetBadRequestResult("incorrect_password");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ResponseUtil.GetServerErrorResult(ex.ToString());
+            }
+        }
     }
 }

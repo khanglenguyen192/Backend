@@ -28,6 +28,12 @@ namespace Backend.Services
 
         public ResponseModel CreateUser(UserApiModel model, UserRole userRole)
         {
+            if (string.IsNullOrWhiteSpace(model.UserName))
+                return ResponseUtil.GetBadRequestResult("username_empty");
+
+            if (_userRepository.Exists(u => model.UserName.Equals(u.Email)))
+                return ResponseUtil.GetBadRequestResult("username_exist");
+
             var user = model.ToEntity(new User(), userRole);
             user.Salt = Guid.NewGuid().ToString().Replace("-", "");
             user.PassCode = CommonUtils.GeneratePasscode(Constants.DEFAULT_PASSCODE, user.Salt);
